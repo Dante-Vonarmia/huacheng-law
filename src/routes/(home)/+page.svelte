@@ -900,6 +900,12 @@
     border: 1px solid #E2E8F0;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 
+    // 交错排列：第2、4张卡片向下偏移
+    &:nth-child(2),
+    &:nth-child(4) {
+      transform: translateY(2rem);
+    }
+
     &::before {
       content: '';
       position: absolute;
@@ -926,6 +932,12 @@
         transform: scale(1.1);
         color: $color-secondary;
       }
+    }
+
+    // 保持交错效果的 hover 状态
+    &:nth-child(2):hover,
+    &:nth-child(4):hover {
+      transform: translateY(calc(2rem - 8px));
     }
   }
 
