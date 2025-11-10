@@ -17,6 +17,7 @@ export { default as FilterBar, applyFilters } from './FilterBar.svelte';
 export { default as Pagination } from './Pagination.svelte';
 export { default as OrgChart } from './OrgChart.svelte';
 export { default as OrgNode } from './OrgNode.svelte';
+export { default as Section } from './Section.svelte';
 
 // 高级组件
 export { default as Stats } from './Stats.svelte';
