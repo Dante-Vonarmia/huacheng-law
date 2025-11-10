@@ -1,0 +1,52 @@
+{
+  "name": "@watson-band/ui-kit",
+  "version": "1.0.0",
+  "description": "Watson & Band Law Firm UI Kit - 华诚律师事务所组件库",
+  "type": "module",
+  "main": "index.ts",
+  "module": "index.ts",
+  "types": "index.ts",
+  "svelte": "index.ts",
+  "exports": {
+    ".": "./index.ts",
+    "./components": "./components/index.ts",
+    "./layouts": "./layouts/index.ts",
+    "./domain": "./domain/index.ts",
+    "./styles/*": "./styles/*"
+  },
+  "files": [
+    "components",
+    "layouts",
+    "domain",
+    "styles",
+    "index.ts",
+    "README.md"
+  ],
+  "keywords": [
+    "svelte",
+    "ui-kit",
+    "components",
+    "law-firm",
+    "design-system",
+    "watson-band",
+    "huacheng"
+  ],
+  "author": "Watson & Band Law Firm",
+  "license": "UNLICENSED",
+  "private": true,
+  "peerDependencies": {
+    "svelte": "^4.0.0 || ^5.0.0"
+  },
+  "devDependencies": {
+    "sass": "^1.69.0",
+    "svelte": "^4.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/watson-band/ui-kit"
+  },
+  "bugs": {
+    "url": "https://github.com/watson-band/ui-kit/issues"
+  },
+  "homepage": "https://github.com/watson-band/ui-kit#readme"
+}

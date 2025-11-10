@@ -1,0 +1,107 @@
+{
+  "nav": {
+    "home": "首页",
+    "about": "关于华诚",
+    "practices": "业务领域",
+    "team": "律师团队",
+    "news": "新闻动态",
+    "publications": "出版物",
+    "events": "讲座活动",
+    "careers": "招贤纳士",
+    "contact": "联系我们",
+    "showcase": "组件展示",
+    "search": "搜索"
+  },
+  "home": {
+    "hero_title": "进取敬业，思远诚信",
+    "hero_subtitle": "Watson & Band - 专业法律服务30年",
+    "practices_title": "业务领域",
+    "practices_subtitle": "专注知识产权、公司法、诉讼仲裁等领域",
+    "lawyers_title": "专业团队",
+    "lawyers_subtitle": "汇聚资深律师，提供卓越法律服务",
+    "news_title": "最新动态",
+    "news_subtitle": "了解华诚最新资讯与行业洞察"
+  },
+  "about": {
+    "overview_title": "关于华诚",
+    "history_title": "发展历程",
+    "csr_title": "公益活动",
+    "awards_title": "荣誉奖项"
+  },
+  "practices": {
+    "title": "业务领域",
+    "filter": "筛选领域",
+    "all": "全部领域",
+    "related_lawyers": "主办律师"
+  },
+  "team": {
+    "title": "律师团队",
+    "filter_by_practice": "按业务领域筛选",
+    "filter_by_office": "按办公地点筛选",
+    "filter_by_language": "按语言筛选",
+    "all_practices": "全部领域",
+    "all_offices": "全部办公室",
+    "all_languages": "全部语言",
+    "contact": "联系方式",
+    "practices": "业务领域",
+    "publications": "出版物",
+    "related_news": "相关新闻"
+  },
+  "news": {
+    "title": "新闻动态",
+    "latest": "最新动态",
+    "all_categories": "全部分类",
+    "read_more": "阅读更多",
+    "share": "分享"
+  },
+  "events": {
+    "title": "讲座活动",
+    "upcoming": "即将举办",
+    "past": "往期活动",
+    "register": "立即报名",
+    "speaker": "主讲人",
+    "location": "地点",
+    "date": "时间"
+  },
+  "careers": {
+    "title": "招贤纳士",
+    "positions": "职位列表",
+    "apply": "在线申请",
+    "upload_resume": "上传简历"
+  },
+  "contact": {
+    "title": "联系我们",
+    "form_title": "在线留言",
+    "offices": "办公地点",
+    "name": "姓名",
+    "email": "邮箱",
+    "phone": "电话",
+    "message": "留言",
+    "submit": "提交",
+    "success": "提交成功，我们会尽快与您联系",
+    "error": "提交失败，请稍后重试"
+  },
+  "search": {
+    "title": "搜索结果",
+    "placeholder": "搜索律师、新闻、业务领域...",
+    "results": "搜索结果",
+    "no_results": "未找到相关结果",
+    "filter_by_type": "按类型筛选"
+  },
+  "common": {
+    "more": "更多",
+    "loading": "加载中...",
+    "error": "出错了",
+    "back": "返回",
+    "next": "下一页",
+    "prev": "上一页",
+    "page": "第 {page} 页"
+  },
+  "footer": {
+    "copyright": "© 2000-2025 Watson & Band 版权所有",
+    "icp": "沪ICP备15028801号",
+    "address": "上海市长宁区89号世纪商贸广场18层",
+    "phone": "(86-21) 5292-1111",
+    "email": "mail@watsonband.com"
+  }
+}

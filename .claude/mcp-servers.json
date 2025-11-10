@@ -1,0 +1,24 @@
+{
+  "mcpServers": {
+    "pm-agent": {
+      "command": "node",
+      "args": [".claude/agents/pm-agent.js"],
+      "description": "项目管理 Agent - 负责任务规划、进度追踪、文档管理"
+    },
+    "design-agent": {
+      "command": "node",
+      "args": [".claude/agents/design-agent.js"],
+      "description": "设计系统 Agent - 负责 UI Kit 组件库、视觉规范、样式体系"
+    },
+    "frontend-agent": {
+      "command": "node",
+      "args": [".claude/agents/frontend-agent.js"],
+      "description": "前端开发 Agent - 负责页面模板、路由、后台适配"
+    },
+    "qa-agent": {
+      "command": "node",
+      "args": [".claude/agents/qa-agent.js"],
+      "description": "质量保障 Agent - 负责性能测试、A11y 检测、报告生成"
+    }
+  }
+}

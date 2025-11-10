@@ -1,0 +1,381 @@
+// ========================================
+// 华诚律师事务所 - SCSS 变量体系
+// 基于 Pages.Revox.io 设计语言适配
+// ========================================
+
+// Import Sass modules for modern functions
+@use 'sass:color';
+
+// ========== 品牌色彩系统 ==========
+// 参考华诚律师事务所官网 - 绿色主题
+
+// 主色调（Master Colors）
+$color-primary: #5a9d7e;      // 华诚绿 - 专业、信任、成长
+$color-secondary: #81b89e;    // 浅绿 - 清新、活力
+$color-accent: #478066;       // 深绿 - 强调色
+
+// 灰度系统（参考 Pages 的 @color-master 体系）
+$color-master: #626262;       // 基础灰（Pages 标准）
+
+// 自动生成灰度梯度（color.mix 函数模拟 Pages 的 LESS mix）
+$color-master-lightest: color.mix($color-master, #fff, 3%);    // 极浅灰 #fafafa - 背景色
+$color-master-lighter:  color.mix($color-master, #fff, 9.5%);  // 浅灰 #f2f2f2 - 次级背景
+$color-master-light:    color.mix($color-master, #fff, 16%);   // 中浅灰 #e8e8e8 - 边框
+
+$color-master-dark:     color.mix($color-master, #000, 45%);   // 深灰 #2c3e50 - 标题文字
+$color-master-darker:   color.mix($color-master, #000, 27%);   // 更深灰 #3a3a3a
+$color-master-darkest:  color.mix($color-master, #000, 18%);   // 最深灰 #2d2d2d
+
+// 语义色（Semantic Colors - Pages 标准）
+$color-success:  #10cfbd;     // 青绿色 - 成功状态
+$color-complete: #48b0f7;     // 天蓝色 - 完成/主要行动
+$color-warning:  #f8d053;     // 黄色 - 警告
+$color-danger:   #f55753;     // 红色 - 危险/错误
+$color-info:     #3b4752;     // 深蓝灰 - 信息提示
+
+// 生成语义色的浅色和深色变体（Pages 混合比例）
+$mix-percentage-light:   80%;
+$mix-percentage-lighter: 20%;
+$mix-percentage-dark:    81%;
+$mix-percentage-darker:  60%;
+
+// Success 变体
+$color-success-lighter: color.mix($color-success, #fff, $mix-percentage-lighter);
+$color-success-light:   color.mix($color-success, #fff, $mix-percentage-light);
+$color-success-dark:    color.mix($color-success, #000, $mix-percentage-dark);
+$color-success-darker:  color.mix($color-success, #000, $mix-percentage-darker);
+
+// Complete 变体
+$color-complete-lighter: color.mix($color-complete, #fff, $mix-percentage-lighter);
+$color-complete-light:   color.mix($color-complete, #fff, $mix-percentage-light);
+$color-complete-dark:    color.mix($color-complete, #000, $mix-percentage-dark);
+$color-complete-darker:  color.mix($color-complete, #000, $mix-percentage-darker);
+
+// Primary 变体（律所主色）
+$color-primary-lighter: color.mix($color-primary, #fff, $mix-percentage-lighter);
+$color-primary-light:   color.mix($color-primary, #fff, $mix-percentage-light);
+$color-primary-dark:    color.mix($color-primary, #000, $mix-percentage-dark);
+$color-primary-darker:  color.mix($color-primary, #000, $mix-percentage-darker);
+
+// Secondary 变体（金色）
+$color-secondary-lighter: color.mix($color-secondary, #fff, $mix-percentage-lighter);
+$color-secondary-light:   color.mix($color-secondary, #fff, $mix-percentage-light);
+$color-secondary-dark:    color.mix($color-secondary, #000, $mix-percentage-dark);
+$color-secondary-darker:  color.mix($color-secondary, #000, $mix-percentage-darker);
+
+// Warning 变体
+$color-warning-lighter: color.mix($color-warning, #fff, $mix-percentage-lighter);
+$color-warning-light:   color.mix($color-warning, #fff, $mix-percentage-light);
+$color-warning-dark:    color.mix($color-warning, #000, $mix-percentage-dark);
+$color-warning-darker:  color.mix($color-warning, #000, $mix-percentage-darker);
+
+// Danger 变体
+$color-danger-lighter: color.mix($color-danger, #fff, $mix-percentage-lighter);
+$color-danger-light:   color.mix($color-danger, #fff, $mix-percentage-light);
+$color-danger-dark:    color.mix($color-danger, #000, $mix-percentage-dark);
+$color-danger-darker:  color.mix($color-danger, #000, $mix-percentage-darker);
+
+// 基础色
+$color-white: #ffffff;
+$color-black: #000000;
+
+// 文本色（基于灰度系统）
+$color-text-primary:   $color-master-dark;      // #2c3e50 主要文字
+$color-text-secondary: $color-master;           // #626262 次要文字
+$color-text-tertiary:  color.mix($color-master, #fff, 50%);  // 第三级文字（更浅）
+$color-text-light:     color.mix($color-master, #fff, 40%);  // 浅文字
+
+// 文本色别名（兼容性）
+$color-text: $color-text-primary;  // 默认文字色
+$color-error: $color-danger;       // 错误色（Pages 标准使用 danger）
+
+// 背景色
+$color-background:       $color-master-lightest;  // #fafafa 页面背景
+$color-background-alt:   #f5f5f5;                 // 备用背景（Pages dashboard-background）
+$color-background-light: $color-master-lighter;   // 浅色背景
+
+// ========== 字体系统 ==========
+// 参考 Pages 的字体栈策略：系统字体优先 + 专业标题字体
+
+// 中文字体（优先使用霞鹜文楷楷体，增强优雅感）
+$font-family-zh: 'LXGW WenKai', 'Noto Sans SC', 'Source Han Sans CN', 'PingFang SC',
+                 'Microsoft YaHei', sans-serif;
+
+// 英文字体（保留 Pages 的 Montserrat 用于标题）
+$font-family-en: 'Montserrat', 'Helvetica Neue', 'Helvetica', Arial, sans-serif;
+
+// 正文字体（Pages 标准：楷体优先，提升专业优雅感）
+$font-family-body: 'LXGW WenKai', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+                   'PingFang SC', 'Microsoft YaHei', sans-serif;
+
+// 中文字体别名（兼容性）
+$font-family-cn: $font-family-zh;
+
+// 标题字体（楷体优先，增强中文法律网站专业感）
+$font-family-heading: 'LXGW WenKai', $font-family-en, $font-family-zh, sans-serif;
+
+// 衬线字体（用于特殊强调）
+$font-family-serif: 'LXGW WenKai', 'Noto Serif SC', 'Source Serif Pro', Georgia, serif;
+
+// 字号层级（Pages 标准：44px → 18px）
+$font-size-h1-mega: 110px;  // 超大标题（Hero）
+$font-size-h1:      44px;   // h1 标题
+$font-size-h2:      31px;   // h2 标题
+$font-size-h3:      27px;   // h3 标题
+$font-size-h4:      22px;   // h4 标题
+$font-size-h5:      18px;   // h5 标题
+$font-size-h6:      16px;   // h6 标题
+
+// 正文字号
+$font-size-4xl:     48px;   // 超超大字
+$font-size-3xl:     36px;   // 超大字
+$font-size-2xl:     24px;   // 特大字
+$font-size-xl:      20px;   // 超大字
+$font-size-lg:      18px;   // 大字
+$font-size-p:       16px;   // 段落字号（略大于基准）
+$font-size-base:    14px;   // 基准字号（Pages body 标准）
+$font-size-small:   12px;   // 小字
+$font-size-sm:      12px;   // 小字（别名，兼容性）
+$font-size-xs:      11px;   // 超小字
+
+// 特殊用途字号
+$font-size-block-title: 15px;  // BlockTitle 组件专用
+
+// 字重（Pages 标准：轻字重为主）
+$font-weight-light:     300;  // Light - Pages 默认
+$font-weight-normal:    400;  // Regular
+$font-weight-medium:    500;  // Medium（少用）
+$font-weight-semibold:  600;  // Semi-bold（仅用于强调）
+$font-weight-bold:      700;  // Bold（Montserrat 标题用）
+
+// 行高（Pages 标准：1.4-1.6 倍字号）
+$line-height-h1:     55px;    // h1 专用
+$line-height-h2:     42px;    // h2 专用
+$line-height-h3:     40px;    // h3 专用
+$line-height-h4:     32px;    // h4 专用（31.88px 取整）
+$line-height-h5:     26px;    // h5 专用（25.88px 取整）
+$line-height-base:   21px;    // 正文行高
+$line-height-p:      25px;    // 段落行高
+$line-height-small:  18px;    // 小字行高
+
+// 通用行高比例
+$line-height-tight:   1.2;
+$line-height-normal:  1.5;
+$line-height-relaxed: 1.6;
+$line-height-loose:   1.8;
+
+// 字母间距（Pages 细节）
+$letter-spacing-base:   0.01em;   // 正文
+$letter-spacing-title:  0.03em;   // BlockTitle
+$letter-spacing-tight: -0.009em;  // 超大标题视觉修正
+$letter-spacing-heading: -0.0045em; // h4 标题
+
+// ========== 间距系统 ==========
+// 参考 Pages 的 padding/margin 规范（5的倍数）
+
+// 基础间距（Pages 标准）
+$spacing-xs:   5px;
+$spacing-sm:   10px;
+$spacing-md:   20px;
+$spacing-lg:   30px;
+$spacing-xl:   40px;
+
+// 组件内边距（Pages padding 变量）
+$padding-base-horizontal:  17px;  // 按钮/表单默认
+$padding-lg-horizontal:    28px;  // 大尺寸
+$padding-sm-horizontal:    16px;  // 小尺寸
+$padding-xs-horizontal:    9px;   // 超小尺寸
+$padding-xs-vertical:      2px;
+
+// Section 区块间距（Pages 标准）
+$spacing-section-top:    75px;   // section padding-top
+$spacing-section-bottom: 85px;   // section padding-bottom
+$spacing-section-compact-top:    55px;   // 紧凑版
+$spacing-section-compact-bottom: 65px;
+
+// 扩展间距（更大尺寸）
+$spacing-2xl:  64px;
+$spacing-3xl:  96px;
+
+// ========== 布局系统 ==========
+// Header 高度（Pages 标准）
+$header-default-height:   60px;
+$header-big-height:       110px;
+$header-medium-height:    88px;
+$header-small-height:     44px;
+$header-mobile-height:    48px;
+
+// 容器宽度
+$container-max-width:     1140px;  // 标准容器
+$container-max-width-lg:  1700px;  // 超宽屏（Pages 标准）
+
+// 表单高度（Pages 标准）
+$form-group-height:       54px;
+$form-control-height:     54px;
+
+// Panel 尺寸
+$panel-padding:           20px;
+$panel-heading-padding:   20px 20px 7px 20px;
+$panel-heading-min-height: 48px;
+
+// ========== 响应式断点 ==========
+// 兼容 Pages 的 Bootstrap 3 断点
+$breakpoint-xs:      0;       // 手机
+$breakpoint-sm:      768px;   // 平板
+$breakpoint-md:      992px;   // 小桌面
+$breakpoint-lg:      1200px;  // 大桌面
+$breakpoint-xl:      1920px;  // 超宽屏
+
+// 媒体查询简写
+$mobile:   $breakpoint-xs;
+$tablet:   $breakpoint-sm;
+$desktop:  $breakpoint-md;
+$wide:     $breakpoint-lg;
+
+// ========== 阴影系统 ==========
+// Pages 是扁平化设计，阴影极少使用
+// 仅在必要时添加微妙阴影
+
+$shadow-none:   none;
+$shadow-sm:     0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow-base:   0 1px 3px 0 rgba(0, 0, 0, 0.1),
+                0 1px 2px 0 rgba(0, 0, 0, 0.06);
+$shadow-md:     0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                0 2px 4px -1px rgba(0, 0, 0, 0.06);
+$shadow-lg:     0 10px 15px -3px rgba(0, 0, 0, 0.1),
+                0 4px 6px -2px rgba(0, 0, 0, 0.05);
+$shadow-xl:     0 20px 25px -5px rgba(0, 0, 0, 0.1),
+                0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+// 注意：Pages 按钮和卡片通常无阴影
+
+// ========== 圆角 ==========
+// Pages 标准：轻微圆角（3px）
+$radius-none:   0;
+$radius-sm:     2px;
+$radius-base:   3px;    // Pages 标准按钮圆角
+$radius-md:     8px;
+$radius-lg:     12px;
+$radius-full:   9999px; // 圆形
+
+// ========== 边框 ==========
+// Pages 边框样式
+$border-width:         1px;
+$border-color:         rgba(0, 0, 0, 0.07);  // Pages panel-border-color
+$color-border:         rgba(0, 0, 0, 0.07);  // 别名，兼容性
+$border-color-light:   $color-master-lighter;
+$border-color-dark:    color.mix($color-master, #000, 27%);
+
+// 表单边框（Pages 标准）
+$form-control-border:  rgba(0, 0, 0, 0.07);
+
+// ========== 过渡动画 ==========
+// Pages 标准过渡时长
+$transition-fast:      0.1s;   // 颜色变化
+$transition-base:      0.2s;   // 透明度
+$transition-slow:      0.4s;   // 结构变化（Header 收缩）
+
+// 缓动函数
+$transition-ease:      ease;
+$transition-linear:    linear;
+$transition-ease-in-out: ease-in-out;
+
+// Pages 菜单动画专用
+$transition-menu-bezier: cubic-bezier(0.05, 0.74, 0.27, 0.99);
+
+// 组合过渡（Pages 标准）
+$transition-all:       color $transition-fast linear,
+                       background-color $transition-fast linear,
+                       opacity $transition-base linear;
+
+// ========== Z-index 层级 ==========
+// Pages z-index 体系
+$zIndex-1:     100;
+$zIndex-2:     200;
+$zIndex-3:     300;
+$zIndex-4:     400;
+$zIndex-5:     500;
+$zIndex-6:     600;
+$zIndex-7:     700;
+$zIndex-8:     800;   // Header
+$zIndex-9:     900;   // Navbar
+$zIndex-10:    1000;  // Sidebar, Tooltips
+
+// 常用层级命名
+$z-index-header:     $zIndex-8;
+$z-index-dropdown:   $zIndex-10;
+$z-index-sticky:     1020;
+$z-index-fixed:      1030;
+$z-index-modal-backdrop: 1040;
+$z-index-modal:      1050;
+$z-index-popover:    1060;
+$z-index-tooltip:    1070;
+
+// ========== 其他设计 tokens ==========
+
+// 抗锯齿渲染
+$font-smoothing: antialiased;
+$text-rendering: optimizeLegibility;
+
+// 焦点轮廓
+$focus-ring-color: $color-complete;
+$focus-ring-width: 2px;
+$focus-ring-offset: 2px;
+
+// 禁用状态透明度
+$opacity-disabled: 0.6;
+
+// 图标尺寸
+$icon-size-sm: 14px;
+$icon-size-base: 16px;
+$icon-size-lg: 21px;
+
+// ========== 组件专用变量 ==========
+
+// BlockTitle 组件（Pages 特色）
+$block-title-font-family:     'Montserrat';
+$block-title-font-size:       15px;
+$block-title-font-weight:     400;
+$block-title-text-transform:  uppercase;
+$block-title-letter-spacing:  0.03em;
+
+// 按钮（Pages 标准）
+$btn-border-radius:    $radius-base;  // 3px
+$btn-border-width:     1px;
+$btn-padding-x:        $padding-base-horizontal;  // 17px
+$btn-padding-y:        auto;  // 由 line-height 控制
+$btn-line-height:      21px;
+$btn-font-size:        14px;
+$btn-min-width-cons:   120px;  // .btn-cons 固定宽度
+
+// 导航菜单
+$menu-item-spacing:    12px;
+$menu-font-size:       13px;
+
+// ========== 工具类变量 ==========
+
+// 响应式显示工具类前缀
+$visible-xs: 'visible-xs';
+$visible-sm: 'visible-sm';
+$visible-md: 'visible-md';
+$hidden-xs:  'hidden-xs';
+$hidden-sm:  'hidden-sm';
+$hidden-md:  'hidden-md';
+
+// ========================================
+// 使用说明
+// ========================================
+//
+// 1. 色彩使用：优先使用灰度色，语义色仅用于状态标识
+// 2. 字体：标题用 Montserrat，正文用系统字体
+// 3. 字重：默认 300，避免过度使用粗体
+// 4. 间距：遵循 5 的倍数，section 用 75-85px
+// 5. 圆角：统一 3px（Pages 标准）
+// 6. 阴影：尽量不用，扁平化设计
+// 7. 过渡：快速响应（0.1-0.2s），结构变化 0.4s
+//
+// ========================================
+// 最后更新：2025-11-06
+// 基于：Pages.Revox.io Design Language
+// 适配：华诚律师事务所品牌规范
+// ========================================

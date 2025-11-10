@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="%sveltekit.assets%/favicon.svg" />
+
+		<!-- Mobile First Responsive Meta Tags -->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
+		<meta name="format-detection" content="telephone=no" />
+		<meta name="mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+		<meta name="apple-mobile-web-app-title" content="Watson & Band" />
+
+		<!-- PWA Manifest -->
+		<link rel="manifest" href="%sveltekit.assets%/manifest.json" />
+
+		<!-- Touch & Interaction -->
+		<meta name="msapplication-tap-highlight" content="no" />
+		<meta name="HandheldFriendly" content="true" />
+
+		<!-- SEO Meta Tags -->
+		<meta name="description" content="华诚律师事务所 - 30年专业法律服务经验，提供知识产权、公司法、诉讼仲裁等全方位法律解决方案" />
+		<meta name="keywords" content="华诚律师,律师事务所,知识产权,公司法,诉讼仲裁,法律咨询,Watson & Band" />
+		<meta name="author" content="Watson & Band Law Firm" />
+		<meta name="theme-color" content="#5a9a7f" media="(prefers-color-scheme: light)" />
+		<meta name="theme-color" content="#4a8a6f" media="(prefers-color-scheme: dark)" />
+		<meta name="color-scheme" content="light" />
+
+		<!-- Open Graph / Social Media -->
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content="华诚律师事务所 - Watson & Band" />
+		<meta property="og:description" content="30年专业法律服务经验，值得信赖的法律合作伙伴" />
+		<meta property="og:site_name" content="Watson & Band" />
+		<meta property="og:locale" content="zh_CN" />
+
+		<!-- Twitter Card -->
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content="华诚律师事务所 - Watson & Band" />
+		<meta name="twitter:description" content="30年专业法律服务经验，值得信赖的法律合作伙伴" />
+
+		<!-- Performance & Preload -->
+		<link rel="preconnect" href="https://images.unsplash.com" crossorigin />
+		<link rel="dns-prefetch" href="https://images.unsplash.com" />
+
+		<!-- Font Preloading - 霞鹜文楷优先加载 -->
+		<link rel="preload" href="/fonts/LXGWWenKai-Regular.ttf" as="font" type="font/ttf" crossorigin />
+		<link rel="preload" href="/fonts/LXGWWenKai-Bold.ttf" as="font" type="font/ttf" crossorigin />
+
+		<!-- Robots & Indexing -->
+		<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+
+		%sveltekit.head%
+
+		<!-- Touch-friendly styles -->
+		<style>
+			* {
+				-webkit-tap-highlight-color: transparent;
+				-webkit-touch-callout: none;
+			}
+
+			html {
+				-webkit-text-size-adjust: 100%;
+				-ms-text-size-adjust: 100%;
+				touch-action: manipulation;
+			}
+		</style>
+	</head>
+	<body data-sveltekit-preload-data="hover">
+		<div style="display: contents">%sveltekit.body%</div>
+	</body>
+</html>

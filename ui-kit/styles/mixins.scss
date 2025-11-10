@@ -1,0 +1,876 @@
+// ========================================
+// 华诚律师事务所 - SCSS Mixins 工具库
+// 基于 Pages.Revox.io 设计语言
+// ========================================
+
+@use './variables.scss' as *;
+@use 'sass:color';
+@use 'sass:math';
+
+// ========== Pages 核心 Mixins ==========
+
+/// 按钮 Mixin（Pages 标准）
+/// @param {Color} $text-color - 文字颜色
+/// @param {Color} $bg-color - 背景颜色
+/// @param {Color} $border-color - 边框颜色
+@mixin button($text-color, $bg-color, $border-color) {
+  color: $text-color;
+  background-color: $bg-color;
+  border: $btn-border-width solid $border-color;
+
+  &:hover {
+    background-color: mix($bg-color, #000, 95%);  // Pages hover: 略深
+    border-color: mix($border-color, #000, 85%);
+  }
+
+  &.active,
+  &:active {
+    background-color: mix($bg-color, #000, 90%);
+    border-color: mix($border-color, #000, 75%);
+  }
+
+  &:focus,
+  &:active:focus,
+  &.active:focus {
+    outline: none !important;
+    outline-style: none;
+  }
+}
+
+/// 按钮重置样式
+@mixin button-reset {
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+/// Header链接样式（Pages 特有的透明度过渡）
+/// @param {Number} $opacity-default - 默认透明度
+/// @param {Number} $opacity-hover - hover 透明度
+/// @param {Number} $opacity-active - active 透明度
+@mixin header-link($opacity-default, $opacity-hover, $opacity-active) {
+  opacity: $opacity-default;
+
+  &:hover {
+    opacity: $opacity-hover;
+  }
+
+  &.active,
+  &:active {
+    opacity: $opacity-active;
+  }
+}
+
+/// Header颜色主题（Pages 标准）
+/// @param {Color} $bg - 背景色
+/// @param {Color} $text - 文字色
+/// @param {Number} $opacity - 背景透明度百分比
+@mixin header-color($bg, $text, $opacity) {
+  background-color: rgba($bg, $opacity / 100%);
+
+  .menu > li > a:not(.btn) {
+    color: $text;
+  }
+
+  .search-toggle {
+    color: $text;
+  }
+
+  .menu.bordered > li > a {
+    border-color: $text;
+  }
+
+  .menu-toggler .one,
+  .menu-toggler .two,
+  .menu-toggler .three {
+    background-color: $text;
+  }
+}
+
+/// Header尺寸变体（Pages 标准）
+/// @param {Number} $height - Header 高度
+@mixin header-sizes($height) {
+  height: $height;
+
+  .header-inner {
+    line-height: $height;
+  }
+
+  .menu-toggler {
+    margin-top: math.div($height - 15px, 2);  // 15px 是 menu-toggler-size
+  }
+}
+
+/// Border Radius Mixin
+/// @param {Number} $radius - 圆角半径
+@mixin border-radius($radius) {
+  border-radius: $radius;
+  -webkit-border-radius: $radius;
+  -moz-border-radius: $radius;
+}
+
+/// Transition Mixin
+/// @param {String} $properties - CSS 过渡属性
+@mixin transition($properties) {
+  transition: $properties;
+  -webkit-transition: $properties;
+  -moz-transition: $properties;
+  -o-transition: $properties;
+}
+
+// ========== 响应式断点 Mixins ==========
+
+/// 移动端优先 - 最小宽度断点（Pages Bootstrap 3 风格）
+/// @param {String} $breakpoint - 断点名称 (sm/md/lg/tablet/desktop)
+@mixin respond-from($breakpoint) {
+  @if $breakpoint == sm or $breakpoint == mobile {
+    @media (min-width: $breakpoint-sm) {
+      @content;
+    }
+  } @else if $breakpoint == md or $breakpoint == tablet {
+    @media (min-width: $breakpoint-md) {
+      @content;
+    }
+  } @else if $breakpoint == lg or $breakpoint == desktop {
+    @media (min-width: $breakpoint-lg) {
+      @content;
+    }
+  } @else if $breakpoint == xl {
+    @media (min-width: $breakpoint-xl) {
+      @content;
+    }
+  }
+}
+
+/// 桌面优先 - 最大宽度断点
+/// @param {String} $breakpoint - 断点名称 (xs, sm, md, mobile, tablet, desktop)
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == xs or $breakpoint == mobile {
+    @media (max-width: #{$breakpoint-sm - 1px}) {
+      @content;
+    }
+  } @else if $breakpoint == sm or $breakpoint == tablet {
+    @media (max-width: #{$breakpoint-md - 1px}) {
+      @content;
+    }
+  } @else if $breakpoint == md or $breakpoint == desktop {
+    @media (max-width: #{$breakpoint-lg - 1px}) {
+      @content;
+    }
+  } @else if $breakpoint == lg {
+    @media (max-width: #{$breakpoint-xl - 1px}) {
+      @content;
+    }
+  }
+}
+
+// ========== 容器 & 布局 Mixins ==========
+
+/// 页面容器 - Pages 标准
+@mixin container {
+  width: 100%;
+  max-width: $container-max-width;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: $spacing-md;
+  padding-right: $spacing-md;
+
+  @include respond-from(md) {
+    padding-left: $spacing-xl;
+    padding-right: $spacing-xl;
+  }
+}
+
+/// 超宽容器 - Pages 标准
+@mixin container-lg {
+  @include container;
+  max-width: $container-max-width-lg;
+}
+
+/// 窄容器 - 适用于文章内容
+@mixin container-narrow {
+  @include container;
+  max-width: 960px;
+}
+
+/// 超宽容器 - 适用于全屏内容
+@mixin container-wide {
+  @include container;
+  max-width: 1600px;
+}
+
+/// Flexbox 水平居中
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/// Flexbox 垂直居中
+@mixin flex-column-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/// Flexbox 两端对齐
+@mixin flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/// 全高容器（Pages 标准）
+@mixin full-height {
+  height: 100%;
+}
+
+/// 全屏视口（Pages 标准）
+@mixin full-vh {
+  height: 100vh;
+  min-height: 100vh;
+}
+
+/// Container XS Height（Pages 特有的垂直居中系统）
+@mixin container-xs-height {
+  display: table;
+  width: 100%;
+  height: 100%;
+}
+
+@mixin col-xs-height {
+  display: table-cell;
+  vertical-align: top;
+}
+
+@mixin col-middle {
+  vertical-align: middle;
+}
+
+// ========== 排版 Mixins ==========
+
+/// 标题样式（Pages 标准：轻字重）
+/// @param {String} $level - 标题级别 (h1-h6, 4xl, xxl, xl, lg, md, sm)
+@mixin heading($level: h1) {
+  font-family: $font-family-heading;
+  font-weight: $font-weight-light;  // Pages 默认 300
+  color: $color-master-dark;
+  margin: 10px 0;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+
+  @if $level == h1 or $level == 4xl {
+    font-size: $font-size-h1;
+    line-height: $line-height-h1;
+    letter-spacing: -0.009em;
+  } @else if $level == h2 or $level == xxl {
+    font-size: $font-size-h2;
+    line-height: $line-height-h2;
+  } @else if $level == h3 or $level == xl {
+    font-size: $font-size-h3;
+    line-height: $line-height-h3;
+  } @else if $level == h4 or $level == lg {
+    font-size: $font-size-h4;
+    line-height: $line-height-h4;
+    letter-spacing: $letter-spacing-heading;
+  } @else if $level == h5 or $level == md {
+    font-size: $font-size-h5;
+    line-height: $line-height-h5;
+  } @else if $level == h6 or $level == sm {
+    font-size: $font-size-h6;
+    line-height: $line-height-h5;
+  }
+}
+
+/// Block Title（Pages 特色组件样式）
+@mixin block-title {
+  font-family: $block-title-font-family;
+  font-weight: $block-title-font-weight;
+  font-size: $block-title-font-size;
+  text-transform: $block-title-text-transform;
+  letter-spacing: $block-title-letter-spacing;
+}
+
+/// 正文样式（Pages 标准）
+@mixin body-text {
+  color: $color-master;
+  font-family: $font-family-body;
+  font-size: $font-size-base;
+  font-weight: $font-weight-light;
+  letter-spacing: $letter-spacing-base;
+  line-height: $line-height-base;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  -webkit-font-feature-settings: "kern" 1;
+  -moz-font-feature-settings: "kern" 1;
+}
+
+/// 段落样式（Pages 标准）
+@mixin paragraph {
+  display: block;
+  font-size: $font-size-p;
+  font-weight: $font-weight-light;
+  letter-spacing: $letter-spacing-base;
+  line-height: $line-height-p;
+  margin: 0 0 10px 0;
+  font-style: normal;
+  white-space: normal;
+}
+
+/// 小文本（Pages 标准）
+@mixin small-text {
+  font-size: $font-size-small;
+  line-height: $line-height-small;
+}
+
+/// 提示文本（Pages hint-text）
+@mixin hint-text {
+  color: mix($color-master, #fff, 50%);
+  @include small-text;
+}
+
+/// 说明文字样式
+@mixin caption {
+  @include small-text;
+  color: mix($color-master, #fff, 50%);
+}
+
+/// 强调文本样式
+@mixin text-accent {
+  color: $color-secondary;
+  font-weight: $font-weight-medium;
+}
+
+/// 链接样式（Pages 标准）
+@mixin link {
+  text-shadow: none !important;
+  color: $color-complete-dark;
+  transition: $transition-all;
+  text-decoration: none;
+  outline: 0 !important;
+
+  &:hover,
+  &:focus,
+  &:active {
+    color: $color-complete;
+    text-decoration: none;
+    outline: 0 !important;
+  }
+}
+
+/// 链接下划线效果
+@mixin link-underline {
+  position: relative;
+  text-decoration: none;
+  transition: color $transition-base;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: currentColor;
+    transition: width $transition-base;
+  }
+
+  &:hover::after,
+  &.active::after {
+    width: 100%;
+  }
+}
+
+/// 文本截断（别名，兼容旧代码）
+@mixin truncate {
+  @include text-ellipsis(1);
+}
+
+/// 表单输入基础样式
+@mixin input-base {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: $font-size-base;
+  line-height: 1.5;
+  color: $color-text-primary;
+  background-color: $color-white;
+  border: 1px solid rgba(0, 0, 0, 0.07);
+  border-radius: 4px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  outline: none;
+
+  &::placeholder {
+    color: $color-text-tertiary;
+  }
+
+  &:hover {
+    border-color: rgba(0, 0, 0, 0.15);
+  }
+
+  &:focus {
+    border-color: $color-primary;
+    box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
+  }
+
+  &:disabled {
+    background-color: $color-background;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+/// 文本截断
+/// @param {Number} $lines - 行数
+@mixin text-ellipsis($lines: 1) {
+  @if $lines == 1 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  } @else {
+    display: -webkit-box;
+    -webkit-line-clamp: $lines;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+// ========== 视觉效果 Mixins ==========
+
+/// 背景图片封面（Pages 标准）
+@mixin bg-cover {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/// Pages 背景图片（通过 data 属性加载）
+/// 注意：实际背景通过 JS 设置 data-pages-bg-image
+@mixin pages-bg-image {
+  @include bg-cover;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+
+/// 视差背景容器（Pages Parallax）
+@mixin parallax-wrapper {
+  position: relative;
+  overflow: hidden;
+
+  .background-wrapper {
+    position: absolute;
+    width: 110%;  // Pages 标准：超出10%用于视差移动
+    height: 110%;
+    top: -5%;
+    left: -5%;
+  }
+
+  .background {
+    @include pages-bg-image;
+  }
+
+  .content-layer {
+    position: relative;
+    z-index: 2;
+  }
+}
+
+/// 图片响应式（Pages 标准）
+@mixin image-responsive {
+  max-width: 100%;
+  height: auto;
+}
+
+@mixin image-responsive-width {
+  width: 100%;
+  height: auto;
+}
+
+@mixin image-responsive-height {
+  height: 100%;
+  width: auto;
+}
+
+// ========== 动画 & 过渡 Mixins ==========
+
+/// 平滑过渡（Pages 标准组合）
+@mixin transition-all {
+  transition: $transition-all;
+}
+
+/// 快速过渡（颜色/背景）
+@mixin transition-fast {
+  transition: color $transition-fast linear,
+              background-color $transition-fast linear;
+}
+
+/// 慢速过渡（结构变化）
+@mixin transition-slow {
+  transition: background $transition-slow ease,
+              height $transition-slow ease;
+}
+
+/// 淡入动画
+@mixin fade-in($duration: $transition-base) {
+  animation: fadeIn $duration ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/// 向上滑入动画（Pages 标准）
+@mixin slide-up($duration: $transition-slow) {
+  animation: slideUp $duration ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/// 悬停缩放动画
+@mixin hover-scale($scale: 1.05) {
+  transition: transform $transition-base;
+
+  &:hover {
+    transform: scale($scale);
+  }
+}
+
+// ========== 按钮组件 Mixins ==========
+
+/// 按钮基础样式（Pages 标准）
+@mixin btn-base {
+  font-family: $font-family-body;
+  font-size: $btn-font-size;
+  font-weight: $font-weight-normal;
+  letter-spacing: $letter-spacing-base;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  -webkit-font-feature-settings: "kern" 1;
+  -moz-font-feature-settings: "kern" 1;
+  margin-bottom: 0;
+  border: $btn-border-width solid $border-color-light;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  @include border-radius($btn-border-radius);
+  background-image: none !important;
+  color: $color-master;
+  background-color: $color-white;
+  text-shadow: none;
+  box-shadow: none;  // Pages 无阴影
+  line-height: $btn-line-height;
+  padding-left: $btn-padding-x;
+  padding-right: $btn-padding-x;
+  position: relative;
+  transition: $transition-all;
+
+  &:hover {
+    background-color: #fafafa;
+    border: $btn-border-width solid mix($color-master, #fff, 27%);
+  }
+
+  &.active {
+    border-color: $color-master-light;
+    background: #fff;
+  }
+
+  &:focus,
+  &:active:focus,
+  &.active:focus {
+    outline: none !important;
+    outline-style: none;
+  }
+
+  &:hover,
+  &:focus,
+  &:active,
+  &.active,
+  &.disabled,
+  &[disabled] {
+    box-shadow: none;
+  }
+}
+
+/// 按钮尺寸变体（Pages 标准）
+@mixin btn-lg {
+  padding-left: $padding-lg-horizontal;
+  padding-right: $padding-lg-horizontal;
+  line-height: 23px;
+}
+
+@mixin btn-sm {
+  padding-left: $padding-sm-horizontal;
+  padding-right: $padding-sm-horizontal;
+  font-size: 11.9px;
+  line-height: 20px;
+}
+
+@mixin btn-xs {
+  padding: $padding-xs-vertical $padding-xs-horizontal;
+  font-size: 10.5px;
+}
+
+@mixin btn-cons {
+  margin-right: 5px;
+  min-width: $btn-min-width-cons;
+}
+
+/// 主按钮样式（Primary Button）
+@mixin btn-primary {
+  @include button($color-white, $color-primary, $color-primary);
+  font-weight: $font-weight-semibold;
+
+  &:hover {
+    background-color: color.scale($color-primary, $lightness: -10%);
+    border-color: color.scale($color-primary, $lightness: -10%);
+  }
+}
+
+/// 次按钮样式（Secondary Button）
+@mixin btn-secondary {
+  @include button($color-white, $color-secondary, $color-secondary);
+  font-weight: $font-weight-semibold;
+
+  &:hover {
+    background-color: color.scale($color-secondary, $lightness: -10%);
+    border-color: color.scale($color-secondary, $lightness: -10%);
+  }
+}
+
+// ========== 表单组件 Mixins ==========
+
+/// 表单控件基础样式（Pages 标准）
+@mixin form-control {
+  width: 100%;
+  height: $form-control-height;
+  padding: 0 $padding-base-horizontal;
+  font-family: $font-family-body;
+  font-size: $font-size-base;
+  line-height: $line-height-base;
+  color: $color-master;
+  background-color: $color-white;
+  border: $border-width solid $form-control-border;
+  @include border-radius($radius-base);
+  transition: $transition-fast;
+  outline: none;
+
+  &:focus {
+    border-color: $color-complete;
+    box-shadow: none;  // Pages 无阴影
+  }
+
+  &::placeholder {
+    color: mix($color-master, #fff, 50%);
+  }
+
+  &:disabled {
+    background-color: $color-master-lightest;
+    cursor: not-allowed;
+    opacity: $opacity-disabled;
+  }
+}
+
+// ========== 面板/卡片 Mixins ==========
+
+/// Panel/Card（Pages 标准）
+@mixin panel {
+  background-color: $color-white;
+  border: $border-width solid $border-color;
+  @include border-radius($radius-base);
+  padding: $panel-padding;
+  box-shadow: none;  // Pages 扁平化：无阴影
+
+  &:hover {
+    // Pages 卡片通常无 hover 效果，保持简洁
+  }
+}
+
+/// Panel Heading（Pages 标准）
+@mixin panel-heading {
+  padding: $panel-heading-padding;
+  min-height: $panel-heading-min-height;
+  border-bottom: $border-width solid $border-color;
+}
+
+// ========== 辅助 Mixins ==========
+
+/// 隐藏但保持可访问性
+@mixin visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/// 清除浮动
+@mixin clearfix {
+  &::after {
+    content: '';
+    display: table;
+    clear: both;
+  }
+}
+
+/// 绝对居中
+@mixin absolute-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/// 全屏覆盖
+@mixin full-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: $z-index-modal-backdrop;
+}
+
+/// No padding（Pages 工具类）
+@mixin no-padding {
+  padding: 0 !important;
+}
+
+/// No margin（Pages 工具类）
+@mixin no-margin {
+  margin: 0 !important;
+}
+
+// ========== Pages 特有工具 Mixins ==========
+
+/// 内容遮罩（Pages content-mask）
+/// 用于限制内容溢出
+@mixin content-mask {
+  overflow: hidden;
+  position: relative;
+}
+
+/// Pull Center Inner（Pages 居中定位）
+@mixin pull-center-inner {
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
+/// Fit（Pages 全屏填充）
+@mixin fit {
+  width: 100%;
+  height: 100%;
+}
+
+/// 滚动条样式（轻量级）
+@mixin scrollbar {
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $color-master-lightest;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $color-master-light;
+    border-radius: 4px;
+
+    &:hover {
+      background: $color-master;
+    }
+  }
+}
+
+// ========== Print 样式 ==========
+
+/// 打印优化
+@mixin print-optimize {
+  @media print {
+    box-shadow: none !important;
+    text-shadow: none !important;
+    color: #000 !important;
+    background: #fff !important;
+  }
+}
+
+// ========== 卡片 & 网格 Mixins ==========
+
+/// 卡片样式 - Pages 标准
+@mixin card {
+  background: $color-white;
+  border: 1px solid rgba($color-master, 0.08);
+  border-radius: $radius-base;
+  padding: $spacing-lg;
+  transition: all $transition-base;
+
+  &:hover {
+    box-shadow: 0 4px 12px rgba($color-black, 0.08);
+  }
+}
+
+/// 响应式网格布局
+/// @param {Number} $columns - 列数
+/// @param {Size} $gap - 间距
+@mixin grid-responsive($columns, $gap) {
+  display: grid;
+  grid-template-columns: repeat($columns, 1fr);
+  gap: $gap;
+
+  @include respond-to(md) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include respond-to(sm) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// ========================================
+// 使用说明
+// ========================================
+//
+// 本 mixins 库严格遵循 Pages.Revox.io 设计语言：
+//
+// 1. 扁平化设计：按钮和卡片无阴影
+// 2. 轻字重：标题默认 300
+// 3. 快速过渡：0.1-0.2s 线性
+// 4. 透明度控制：header-link 用 opacity
+// 5. 自动生成色阶：使用 mix() 函数
+// 6. 视差滚动：background-wrapper 超出 10%
+// 7. 响应式：Bootstrap 3 断点体系
+//
+// ========================================

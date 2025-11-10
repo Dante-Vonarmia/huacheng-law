@@ -1,0 +1,637 @@
+// ========================================
+// 华诚律师事务所 - 全局样式系统
+// 国际顶级律所设计标准
+// ========================================
+
+@use 'sass:color';
+@use './variables.scss' as *;
+@use './mixins.scss' as *;
+
+// ========== 字体声明 Font Declarations ==========
+
+/* 霞鹜文楷 - Regular */
+@font-face {
+  font-family: 'LXGW WenKai';
+  src: url('/fonts/LXGWWenKai-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* 霞鹜文楷 - Bold */
+@font-face {
+  font-family: 'LXGW WenKai';
+  src: url('/fonts/LXGWWenKai-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+// ========== CSS Reset & Normalize ==========
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  // 防止iOS字体自动调整
+  -webkit-text-size-adjust: 100%;
+  // 优化字体渲染
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  // 平滑滚动
+  scroll-behavior: smooth;
+  // 基础字体大小
+  font-size: 16px;
+}
+
+body {
+  font-family: $font-family-body;
+  font-size: $font-size-base;
+  line-height: $line-height-base;
+  color: $color-text-primary;
+  background: $color-white;
+  min-height: 100vh;
+  overflow-x: hidden;
+  font-weight: $font-weight-light; // 使用Light字重（300），更优雅
+
+  // 英文内容自动切换字体
+  &[lang='en'] {
+    font-family: $font-family-en;
+  }
+}
+
+// ========== 排版重置 ==========
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  font-weight: $font-weight-medium; // 改为 500，更优雅
+  line-height: $line-height-tight;
+  letter-spacing: -0.02em; // 紧缩字距，更精致
+}
+
+p {
+  margin: 0;
+  line-height: $line-height-relaxed;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color $transition-base $transition-ease;
+
+  &:hover {
+    color: $color-secondary;
+  }
+}
+
+ul,
+ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+button {
+  @include button-reset;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+// ========== 通用工具类 ==========
+
+// 容器
+.container {
+  @include container;
+}
+
+.container-narrow {
+  @include container-narrow;
+}
+
+.container-wide {
+  @include container-wide;
+}
+
+// 间距工具类
+.mt-xs { margin-top: $spacing-xs; }
+.mt-sm { margin-top: $spacing-sm; }
+.mt-md { margin-top: $spacing-md; }
+.mt-lg { margin-top: $spacing-lg; }
+.mt-xl { margin-top: $spacing-xl; }
+.mt-2xl { margin-top: $spacing-2xl; }
+.mt-3xl { margin-top: $spacing-3xl; }
+
+.mb-xs { margin-bottom: $spacing-xs; }
+.mb-sm { margin-bottom: $spacing-sm; }
+.mb-md { margin-bottom: $spacing-md; }
+.mb-lg { margin-bottom: $spacing-lg; }
+.mb-xl { margin-bottom: $spacing-xl; }
+.mb-2xl { margin-bottom: $spacing-2xl; }
+.mb-3xl { margin-bottom: $spacing-3xl; }
+
+.pt-xs { padding-top: $spacing-xs; }
+.pt-sm { padding-top: $spacing-sm; }
+.pt-md { padding-top: $spacing-md; }
+.pt-lg { padding-top: $spacing-lg; }
+.pt-xl { padding-top: $spacing-xl; }
+.pt-2xl { padding-top: $spacing-2xl; }
+.pt-3xl { padding-top: $spacing-3xl; }
+
+.pb-xs { padding-bottom: $spacing-xs; }
+.pb-sm { padding-bottom: $spacing-sm; }
+.pb-md { padding-bottom: $spacing-md; }
+.pb-lg { padding-bottom: $spacing-lg; }
+.pb-xl { padding-bottom: $spacing-xl; }
+.pb-2xl { padding-bottom: $spacing-2xl; }
+.pb-3xl { padding-bottom: $spacing-3xl; }
+
+// 文本对齐
+.text-left { text-align: left; }
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+
+// 文本颜色
+.text-primary { color: $color-primary; }
+.text-secondary { color: $color-secondary; }
+.text-light { color: $color-text-light; }
+.text-white { color: $color-white; }
+
+// 背景颜色
+.bg-primary { background-color: $color-primary; }
+.bg-secondary { background-color: $color-secondary; }
+.bg-light { background-color: $color-background; }
+.bg-white { background-color: $color-white; }
+
+// 显示工具类
+.d-block { display: block; }
+.d-inline { display: inline; }
+.d-inline-block { display: inline-block; }
+.d-flex { display: flex; }
+.d-grid { display: grid; }
+.d-none { display: none; }
+
+// Flexbox 工具类
+.flex-center {
+  @include flex-center;
+}
+
+.flex-column-center {
+  @include flex-column-center;
+}
+
+.flex-between {
+  @include flex-between;
+}
+
+.flex-wrap { flex-wrap: wrap; }
+.flex-nowrap { flex-wrap: nowrap; }
+
+.justify-start { justify-content: flex-start; }
+.justify-center { justify-content: center; }
+.justify-end { justify-content: flex-end; }
+.justify-between { justify-content: space-between; }
+
+.align-start { align-items: flex-start; }
+.align-center { align-items: center; }
+.align-end { align-items: flex-end; }
+
+// 响应式显示
+.hide-mobile {
+  @include respond-to(mobile) {
+    display: none !important;
+  }
+}
+
+.hide-tablet {
+  @include respond-to(tablet) {
+    display: none !important;
+  }
+}
+
+.show-mobile {
+  display: none !important;
+
+  @include respond-to(mobile) {
+    display: block !important;
+  }
+}
+
+// 阴影工具类
+.shadow-sm { box-shadow: $shadow-sm; }
+.shadow { box-shadow: $shadow-base; }
+.shadow-md { box-shadow: $shadow-md; }
+.shadow-lg { box-shadow: $shadow-lg; }
+.shadow-xl { box-shadow: $shadow-xl; }
+
+// 圆角工具类
+.rounded-sm { border-radius: $radius-sm; }
+.rounded { border-radius: $radius-base; }
+.rounded-md { border-radius: $radius-md; }
+.rounded-lg { border-radius: $radius-lg; }
+.rounded-full { border-radius: $radius-full; }
+
+// 可访问性
+.sr-only {
+  @include visually-hidden;
+}
+
+// ========== 标准排版样式 ==========
+
+.heading-4xl {
+  @include heading(4xl);
+  margin-bottom: $spacing-lg;
+
+  @include respond-from(tablet) {
+    font-size: 48px;
+  }
+
+  @include respond-from(desktop) {
+    font-size: 56px;
+  }
+}
+
+.heading-3xl {
+  @include heading(3xl);
+  margin-bottom: $spacing-md;
+
+  @include respond-from(tablet) {
+    font-size: 36px;
+  }
+
+  @include respond-from(desktop) {
+    font-size: 42px;
+  }
+}
+
+.heading-2xl {
+  @include heading(2xl);
+  margin-bottom: $spacing-md;
+
+  @include respond-from(tablet) {
+    font-size: 28px;
+  }
+
+  @include respond-from(desktop) {
+    font-size: 32px;
+  }
+}
+
+.heading-xl {
+  @include heading(xl);
+  margin-bottom: $spacing-sm;
+}
+
+.heading-lg {
+  @include heading(lg);
+  margin-bottom: $spacing-sm;
+}
+
+.body-text {
+  @include body-text;
+  margin-bottom: $spacing-md;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.caption {
+  @include caption;
+}
+
+.text-accent {
+  @include text-accent;
+}
+
+// 标准内容区块
+.content-block {
+  margin-bottom: $spacing-2xl;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+// ========== 富文本内容样式 ==========
+
+.rich-content {
+  @include body-text;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @include heading(lg);
+    margin-top: $spacing-xl;
+    margin-bottom: $spacing-md;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  h1 {
+    @include heading(3xl);
+  }
+
+  h2 {
+    @include heading(2xl);
+  }
+
+  h3 {
+    @include heading(xl);
+  }
+
+  p {
+    margin-bottom: $spacing-md;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  a {
+    color: $color-secondary;
+    text-decoration: underline;
+
+    &:hover {
+      color: color.scale($color-secondary, $lightness: -18.8191881919%);
+    }
+  }
+
+  ul,
+  ol {
+    margin-bottom: $spacing-md;
+    padding-left: $spacing-lg;
+  }
+
+  ul {
+    list-style: disc;
+  }
+
+  ol {
+    list-style: decimal;
+  }
+
+  li {
+    margin-bottom: $spacing-xs;
+    line-height: $line-height-relaxed;
+  }
+
+  strong {
+    font-weight: 600;
+    color: $color-primary;
+  }
+
+  em {
+    font-style: italic;
+  }
+
+  blockquote {
+    border-left: 4px solid $color-secondary;
+    padding-left: $spacing-md;
+    margin: $spacing-lg 0;
+    font-style: italic;
+    color: $color-text-light;
+  }
+
+  code {
+    font-family: 'Monaco', 'Courier New', monospace;
+    background: $color-background;
+    padding: 2px 6px;
+    border-radius: $radius-sm;
+    font-size: 0.9em;
+  }
+
+  pre {
+    background: $color-background;
+    padding: $spacing-md;
+    border-radius: $radius-base;
+    overflow-x: auto;
+    margin: $spacing-lg 0;
+
+    code {
+      background: none;
+      padding: 0;
+    }
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    margin: $spacing-lg 0;
+    border-radius: $radius-base;
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid rgba($color-primary, 0.1);
+    margin: $spacing-xl 0;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: $spacing-lg 0;
+
+    th,
+    td {
+      padding: $spacing-sm;
+      border: 1px solid rgba($color-primary, 0.1);
+      text-align: left;
+    }
+
+    th {
+      background: $color-background;
+      font-weight: 600;
+      color: $color-primary;
+    }
+  }
+}
+
+// ========== Section 分区样式 ==========
+
+.section {
+  padding: $spacing-3xl 0;
+
+  @include respond-to(mobile) {
+    padding: $spacing-2xl 0;
+  }
+
+  &--primary {
+    background: $color-primary;
+    color: $color-white;
+  }
+
+  &--light {
+    background: $color-background;
+  }
+
+  &--white {
+    background: $color-white;
+  }
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: $spacing-2xl;
+
+  @include respond-to(mobile) {
+    margin-bottom: $spacing-xl;
+  }
+}
+
+.section-title {
+  @include heading(3xl);
+  margin-bottom: $spacing-md;
+
+  @include respond-from(desktop) {
+    font-size: 42px;
+  }
+}
+
+.section-subtitle {
+  @include body-text;
+  color: $color-text-light;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+// ========== 动画类 ==========
+
+.fade-in {
+  @include fade-in;
+}
+
+.slide-up {
+  @include slide-up;
+}
+
+// 延迟动画
+@for $i from 1 through 6 {
+  .animation-delay-#{$i} {
+    animation-delay: #{$i * 100}ms;
+  }
+}
+
+// ========== 交互状态 ==========
+
+.hover-lift {
+  transition: transform $transition-base $transition-ease, box-shadow $transition-base $transition-ease;
+
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: $shadow-lg;
+  }
+}
+
+.hover-scale {
+  @include hover-scale;
+}
+
+// ========== 加载状态 ==========
+
+.loading {
+  position: relative;
+  pointer-events: none;
+  opacity: 0.6;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 24px;
+    height: 24px;
+    margin: -12px 0 0 -12px;
+    border: 3px solid $color-secondary;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 0.8s linear infinite;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// ========== 焦点可见性 (无障碍) ==========
+
+:focus-visible {
+  outline: 2px solid $color-secondary;
+  outline-offset: 2px;
+}
+
+// ========== 选中文本样式 ==========
+
+::selection {
+  background: rgba($color-secondary, 0.2);
+  color: $color-primary;
+}
+
+::-moz-selection {
+  background: rgba($color-secondary, 0.2);
+  color: $color-primary;
+}
+
+// ========== 滚动条样式 ==========
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: $color-background;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $color-secondary;
+  border-radius: 5px;
+
+  &:hover {
+    background: color.scale($color-secondary, $lightness: -18.8191881919%);
+  }
+}
+
+// ========== 打印优化 ==========
+
+@media print {
+  *,
+  *::before,
+  *::after {
+    @include print-optimize;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+}

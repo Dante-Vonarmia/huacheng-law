@@ -1,0 +1,110 @@
+{
+  "lawyer": {
+    "description": "律师实体 - 核心业务实体",
+    "relatedTo": ["practice", "news", "publication", "event"],
+    "fields": {
+      "id": { "type": "string", "required": true, "description": "律师唯一标识" },
+      "name_zh": { "type": "string", "required": true, "description": "中文姓名" },
+      "name_en": { "type": "string", "required": true, "description": "英文姓名" },
+      "title_zh": { "type": "string", "required": true, "description": "职位（中文）" },
+      "title_en": { "type": "string", "required": true, "description": "职位（英文）" },
+      "photo": { "type": "string", "required": true, "description": "照片URL" },
+      "email": { "type": "string", "required": true, "description": "邮箱" },
+      "phone": { "type": "string", "required": false, "description": "电话" },
+      "office": { "type": "string", "required": true, "description": "所属办公室" },
+      "practice_ids": { "type": "array", "required": true, "description": "所属业务领域ID列表" },
+      "languages": { "type": "array", "required": true, "description": "语言能力列表" },
+      "education": { "type": "array", "required": false, "description": "教育背景" },
+      "experience": { "type": "array", "required": false, "description": "工作经历" },
+      "bio_zh": { "type": "string", "required": true, "description": "简介（中文）" },
+      "bio_en": { "type": "string", "required": true, "description": "简介（英文）" }
+    },
+    "crossReferences": {
+      "practice": "律师所属的业务领域（多对多）",
+      "news": "律师作为作者的新闻（一对多）",
+      "publication": "律师的出版物（一对多）",
+      "event": "律师参与的活动（多对多）"
+    }
+  },
+  "practice": {
+    "description": "业务领域实体",
+    "relatedTo": ["lawyer"],
+    "fields": {
+      "id": { "type": "string", "required": true, "description": "业务领域唯一标识" },
+      "slug": { "type": "string", "required": true, "description": "URL友好标识" },
+      "name_zh": { "type": "string", "required": true, "description": "名称（中文）" },
+      "name_en": { "type": "string", "required": true, "description": "名称（英文）" },
+      "description_zh": { "type": "string", "required": true, "description": "描述（中文）" },
+      "description_en": { "type": "string", "required": true, "description": "描述（英文）" },
+      "icon": { "type": "string", "required": false, "description": "图标" },
+      "lawyer_ids": { "type": "array", "required": true, "description": "主办律师ID列表" }
+    },
+    "crossReferences": {
+      "lawyer": "业务领域的主办律师（多对多）"
+    }
+  },
+  "news": {
+    "description": "新闻实体",
+    "relatedTo": ["lawyer", "practice"],
+    "fields": {
+      "id": { "type": "string", "required": true, "description": "新闻唯一标识" },
+      "title_zh": { "type": "string", "required": true, "description": "标题（中文）" },
+      "title_en": { "type": "string", "required": true, "description": "标题（英文）" },
+      "summary_zh": { "type": "string", "required": true, "description": "摘要（中文）" },
+      "summary_en": { "type": "string", "required": true, "description": "摘要（英文）" },
+      "content_zh": { "type": "string", "required": true, "description": "内容（中文）" },
+      "content_en": { "type": "string", "required": true, "description": "内容（英文）" },
+      "author_ids": { "type": "array", "required": false, "description": "作者律师ID列表" },
+      "related_practice_ids": { "type": "array", "required": false, "description": "相关业务领域ID" },
+      "category": { "type": "string", "required": true, "description": "分类" },
+      "published_date": { "type": "string", "required": true, "description": "发布日期" },
+      "cover_image": { "type": "string", "required": false, "description": "封面图" }
+    },
+    "crossReferences": {
+      "lawyer": "新闻的作者律师（多对多）",
+      "practice": "新闻相关的业务领域（多对多）"
+    }
+  },
+  "publication": {
+    "description": "出版物实体",
+    "relatedTo": ["lawyer"],
+    "fields": {
+      "id": { "type": "string", "required": true, "description": "出版物唯一标识" },
+      "title_zh": { "type": "string", "required": true, "description": "标题（中文）" },
+      "title_en": { "type": "string", "required": true, "description": "标题（英文）" },
+      "author_ids": { "type": "array", "required": true, "description": "作者律师ID列表" },
+      "published_date": { "type": "string", "required": true, "description": "发布日期" },
+      "type": { "type": "string", "required": true, "description": "类型（文章/报告/书籍）" },
+      "file_url": { "type": "string", "required": false, "description": "文件下载链接" }
+    },
+    "crossReferences": {
+      "lawyer": "出版物的作者律师（多对多）"
+    }
+  },
+  "event": {
+    "description": "活动/讲座实体",
+    "relatedTo": ["lawyer"],
+    "fields": {
+      "id": { "type": "string", "required": true, "description": "活动唯一标识" },
+      "title_zh": { "type": "string", "required": true, "description": "标题（中文）" },
+      "title_en": { "type": "string", "required": true, "description": "标题（英文）" },
+      "description_zh": { "type": "string", "required": true, "description": "描述（中文）" },
+      "description_en": { "type": "string", "required": true, "description": "描述（英文）" },
+      "date": { "type": "string", "required": true, "description": "活动日期" },
+      "location": { "type": "string", "required": true, "description": "地点" },
+      "speaker_ids": { "type": "array", "required": true, "description": "讲师律师ID列表" },
+      "registration_required": { "type": "boolean", "required": true, "description": "是否需要报名" },
+      "status": { "type": "string", "required": true, "description": "状态（upcoming/ongoing/past）" }
+    },
+    "crossReferences": {
+      "lawyer": "活动的讲师律师（多对多）"
+    }
+  },
+  "relationshipRules": {
+    "lawyer <-> practice": "多对多关系 - 一个律师可以隶属多个业务领域，一个业务领域可以有多个律师",
+    "lawyer <-> news": "一对多关系 - 一个律师可以撰写多篇新闻",
+    "lawyer <-> publication": "一对多关系 - 一个律师可以有多个出版物",
+    "lawyer <-> event": "多对多关系 - 一个律师可以参与多个活动，一个活动可以有多个讲师",
+    "news <-> practice": "多对多关系 - 一篇新闻可以关联多个业务领域"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "华诚律师事务所 - Watson & Band",
+  "short_name": "Watson & Band",
+  "description": "30年专业法律服务经验，提供知识产权、公司法、诉讼仲裁等全方位法律解决方案",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1a5f3f",
+  "orientation": "portrait-primary",
+  "icons": [],
+  "categories": ["legal", "business", "professional"],
+  "lang": "zh-CN",
+  "dir": "ltr"
+}

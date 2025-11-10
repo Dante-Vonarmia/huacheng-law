@@ -1,0 +1,117 @@
+{
+  "home": {
+    "route": "/",
+    "template": "Home",
+    "render": "SSG",
+    "priority": "P0",
+    "sections": ["hero", "practice-preview", "lawyer-preview", "news-preview", "partners"]
+  },
+  "about": {
+    "route": "/about",
+    "template": "About",
+    "render": "SSG",
+    "priority": "P1",
+    "sections": ["overview", "history", "csr", "awards"]
+  },
+  "practices": {
+    "list": {
+      "route": "/practices",
+      "template": "PracticeList",
+      "render": "SSG",
+      "priority": "P0",
+      "features": ["category-filter", "search"]
+    },
+    "detail": {
+      "route": "/practices/[slug]",
+      "template": "PracticeDetail",
+      "render": "SSG",
+      "priority": "P0",
+      "features": ["related-lawyers", "case-studies"]
+    }
+  },
+  "team": {
+    "list": {
+      "route": "/team",
+      "template": "LawyerList",
+      "render": "SSR",
+      "priority": "P0",
+      "features": ["filter-by-practice", "filter-by-office", "filter-by-language", "pagination"]
+    },
+    "detail": {
+      "route": "/team/[id]",
+      "template": "LawyerDetail",
+      "render": "SSR",
+      "priority": "P0",
+      "features": ["related-practices", "publications", "news", "contact"]
+    }
+  },
+  "news": {
+    "list": {
+      "route": "/news",
+      "template": "NewsList",
+      "render": "SSR",
+      "priority": "P0",
+      "features": ["category-filter", "pagination", "search"]
+    },
+    "detail": {
+      "route": "/news/[id]",
+      "template": "NewsDetail",
+      "render": "SSR",
+      "priority": "P0",
+      "features": ["author-info", "related-news", "social-share"]
+    }
+  },
+  "publications": {
+    "list": {
+      "route": "/publications",
+      "template": "PublicationList",
+      "render": "SSR",
+      "priority": "P1",
+      "features": ["filter-by-author", "filter-by-topic", "pagination"]
+    },
+    "detail": {
+      "route": "/publications/[id]",
+      "template": "PublicationDetail",
+      "render": "SSR",
+      "priority": "P1",
+      "features": ["author-info", "download"]
+    }
+  },
+  "events": {
+    "list": {
+      "route": "/events",
+      "template": "EventList",
+      "render": "SSR",
+      "priority": "P1",
+      "features": ["upcoming", "past", "registration"]
+    },
+    "detail": {
+      "route": "/events/[id]",
+      "template": "EventDetail",
+      "render": "SSR",
+      "priority": "P1",
+      "features": ["registration-form", "speaker-info", "materials"]
+    }
+  },
+  "careers": {
+    "route": "/careers",
+    "template": "Career",
+    "render": "SSR",
+    "priority": "P1",
+    "features": ["job-list", "application-form", "file-upload"]
+  },
+  "contact": {
+    "route": "/contact",
+    "template": "Contact",
+    "render": "CSR",
+    "priority": "P0",
+    "features": ["contact-form", "office-map", "office-list"]
+  },
+  "search": {
+    "route": "/search",
+    "template": "SearchResult",
+    "render": "CSR",
+    "priority": "P1",
+    "features": ["global-search", "filter-by-type", "pagination"]
+  }
+}
