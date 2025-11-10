@@ -365,55 +365,78 @@
     <h2 class="section-title-alt">业务领域</h2>
     <p class="section-subtitle">专业深耕·全面覆盖</p>
 
-    <!-- Left Sidebar + Right Content Layout -->
-    <div class="practices-layout">
-      <!-- Left Sidebar: All Practice Areas -->
-      <aside class="practices-sidebar">
-        <div class="sidebar-title">领域</div>
-        <nav class="practices-nav">
-          {#each practices as practice, index}
-            <button
-              class="practice-nav-item"
-              class:practice-nav-item--active={activeTabIndex === index}
-              onclick={() => activeTabIndex = index}
-            >
-              <div class="practice-nav-name">{practice.name_zh}</div>
-              <div class="practice-nav-name-en">{practice.name_en}</div>
-            </button>
-          {/each}
-        </nav>
-      </aside>
-
-      <!-- Right Content Area: Rich Text -->
-      <div class="practices-main">
-        {#if practices[activeTabIndex].richContent}
-          <article class="rich-content">
-            {@html practices[activeTabIndex].richContent}
-          </article>
-        {:else}
-          <!-- Fallback for practices without richContent -->
-          <article class="rich-content">
-            <h3>{practices[activeTabIndex].name_zh}</h3>
-            <p>{practices[activeTabIndex].description_zh}</p>
-
-            <h4>核心服务</h4>
-            <ul>
-              {#each practices[activeTabIndex].services as service}
-                <li>{service}</li>
-              {/each}
-            </ul>
-
-            {#if practices[activeTabIndex].cases}
-              <p><strong>案例成果：</strong>{practices[activeTabIndex].cases}</p>
-            {/if}
-          </article>
-        {/if}
-
-        <div class="cta-minimal">
-          <p>了解我们如何帮助您的企业</p>
-          <a href="/contact" class="cta-link">联系我们 →</a>
-        </div>
+    <!-- Practice Area Tabs -->
+    <div class="practice-tabs-wrapper">
+      <div class="practice-tabs">
+        {#each practices as practice, index}
+          <button
+            class="practice-tab-item"
+            class:practice-tab-item--active={activeTabIndex === index}
+            onclick={() => activeTabIndex = index}
+          >
+            <div class="practice-tab-icon">
+              {#if practice.id === 'ip'}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                </svg>
+              {:else if practice.id === 'corporate'}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                </svg>
+              {:else if practice.id === 'data'}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2v20M2 12h20"/>
+                  <circle cx="12" cy="12" r="10"/>
+                </svg>
+              {:else}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                  <path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
+                </svg>
+              {/if}
+            </div>
+            <span class="practice-tab-label">{practice.name_zh}</span>
+          </button>
+        {/each}
       </div>
+    </div>
+
+    <!-- Selected Practice Content -->
+    <div class="practice-content-area">
+      {#if practices[activeTabIndex]}
+        <article class="practice-detail">
+          <div class="practice-detail-header">
+            <h3 class="practice-detail-title">{practices[activeTabIndex].name_zh}</h3>
+            <p class="practice-detail-subtitle">{practices[activeTabIndex].name_en}</p>
+          </div>
+
+          {#if practices[activeTabIndex].richContent}
+            <div class="rich-content">
+              {@html practices[activeTabIndex].richContent}
+            </div>
+          {:else}
+            <div class="rich-content">
+              <p>{practices[activeTabIndex].description_zh}</p>
+
+              <h4>核心服务</h4>
+              <ul>
+                {#each practices[activeTabIndex].services as service}
+                  <li>{service}</li>
+                {/each}
+              </ul>
+
+              {#if practices[activeTabIndex].cases}
+                <p><strong>案例成果：</strong>{practices[activeTabIndex].cases}</p>
+              {/if}
+            </div>
+          {/if}
+        </article>
+      {/if}
+    </div>
+
+    <div class="cta-minimal">
+      <p>了解我们如何帮助您的企业</p>
+      <a href="/contact" class="cta-link">联系我们 →</a>
     </div>
   </section>
 
@@ -700,94 +723,120 @@
     }
   }
 
-  // Practices Layout: Sidebar + Main Content
-  .practices-layout {
+  // Practice Area Tabs
+  .practice-tabs-wrapper {
+    margin: 3rem 0;
+    overflow: hidden;
+  }
+
+  .practice-tabs {
     display: grid;
-    grid-template-columns: 280px 1fr;
-    gap: 3rem;
-    margin-top: 3rem;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem;
+    max-width: 68rem;
+    margin: 0 auto;
   }
 
-  // Left Sidebar
-  .practices-sidebar {
-    position: sticky;
-    top: 6rem;
-    height: fit-content;
-  }
-
-  .sidebar-title {
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: #94a3b8;
-    margin-bottom: 1.5rem;
-    padding-left: 1rem;
-  }
-
-  .practices-nav {
+  .practice-tab-item {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .practice-nav-item {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 1rem 1rem;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1.5rem 1rem;
     background: white;
     border: 1px solid #e2e8f0;
     border-radius: 0.5rem;
     cursor: pointer;
     transition: all 0.3s ease;
-    text-align: left;
-    width: 100%;
+    text-align: center;
 
     &:hover {
       border-color: $color-primary;
       background: #fafbfc;
-      transform: translateX(4px);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     }
 
     &--active {
       background: $color-primary;
       border-color: $color-primary;
-      box-shadow: 0 4px 12px rgba(90, 154, 127, 0.2);
-      transform: translateX(4px);
+      color: white;
+      box-shadow: 0 4px 16px rgba(90, 154, 127, 0.25);
 
-      .practice-nav-name,
-      .practice-nav-name-en {
+      .practice-tab-icon {
+        color: white;
+      }
+
+      .practice-tab-label {
         color: white;
       }
     }
   }
 
-  .practice-nav-name {
-    font-size: 0.9375rem;
-    font-weight: 500;
-    color: #1e293b;
-    margin-bottom: 0.25rem;
+  .practice-tab-icon {
+    width: 2rem;
+    height: 2rem;
+    color: $color-primary;
+    transition: color 0.3s ease;
+
+    svg {
+      width: 100%;
+      height: 100%;
+    }
   }
 
-  .practice-nav-name-en {
-    font-size: 0.75rem;
+  .practice-tab-label {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: #334155;
+    transition: color 0.3s ease;
+  }
+
+  // Practice Content Area
+  .practice-content-area {
+    max-width: 56rem;
+    margin: 3rem auto 0;
+  }
+
+  .practice-detail {
+    animation: fadeIn 0.4s ease;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .practice-detail-header {
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid $color-primary;
+  }
+
+  .practice-detail-title {
+    font-size: 2rem;
+    font-weight: 500;
+    color: $color-primary;
+    margin: 0 0 0.5rem 0;
+    line-height: 1.3;
+  }
+
+  .practice-detail-subtitle {
+    font-size: 1.125rem;
     font-weight: 300;
     color: #94a3b8;
     font-style: italic;
-  }
-
-  // Right Main Content
-  .practices-main {
-    min-width: 0; // Fix overflow issue
+    margin: 0;
   }
 
   // Rich Content Styles - WYSIWYG Editor Output
   .rich-content {
-    background: white;
-    border: 1px solid #f1f5f9;
-    border-radius: 0.5rem;
-    padding: 2.5rem;
     line-height: 1.8;
     color: #475569;
 
