@@ -365,65 +365,55 @@
     <h2 class="section-title-alt">业务领域</h2>
     <p class="section-subtitle">专业深耕·全面覆盖</p>
 
-    <!-- Category Filter Tabs -->
-    <div class="category-tabs">
-      {#each categories as category}
-        <button
-          class="category-tab"
-          class:category-tab--active={selectedCategory === category}
-          onclick={() => selectedCategory = category}
-        >
-          {category}
-        </button>
-      {/each}
-    </div>
+    <!-- Left Sidebar + Right Content Layout -->
+    <div class="practices-layout">
+      <!-- Left Sidebar: All Practice Areas -->
+      <aside class="practices-sidebar">
+        <div class="sidebar-title">领域</div>
+        <nav class="practices-nav">
+          {#each practices as practice, index}
+            <button
+              class="practice-nav-item"
+              class:practice-nav-item--active={activeTabIndex === index}
+              onclick={() => activeTabIndex = index}
+            >
+              <div class="practice-nav-name">{practice.name_zh}</div>
+              <div class="practice-nav-name-en">{practice.name_en}</div>
+            </button>
+          {/each}
+        </nav>
+      </aside>
 
-    <!-- Practices Tabs (horizontal) -->
-    <div class="practices-tabs">
-      {#each filteredPractices() as practice, index}
-        <button
-          class="practice-tab"
-          class:practice-tab--active={activeTabIndex === index && filteredPractices()[index]?.id === practices[activeTabIndex]?.id}
-          onclick={() => {
-            const originalIndex = practices.findIndex(p => p.id === practice.id);
-            activeTabIndex = originalIndex;
-          }}
-        >
-          <div class="practice-tab-name">{practice.name_zh}</div>
-          <div class="practice-tab-name-en">{practice.name_en}</div>
-        </button>
-      {/each}
-    </div>
+      <!-- Right Content Area: Rich Text -->
+      <div class="practices-main">
+        {#if practices[activeTabIndex].richContent}
+          <article class="rich-content">
+            {@html practices[activeTabIndex].richContent}
+          </article>
+        {:else}
+          <!-- Fallback for practices without richContent -->
+          <article class="rich-content">
+            <h3>{practices[activeTabIndex].name_zh}</h3>
+            <p>{practices[activeTabIndex].description_zh}</p>
 
-    <!-- Content Area -->
-    <div class="practice-content">
-      {#if practices[activeTabIndex].richContent}
-        <div class="rich-content">
-          {@html practices[activeTabIndex].richContent}
+            <h4>核心服务</h4>
+            <ul>
+              {#each practices[activeTabIndex].services as service}
+                <li>{service}</li>
+              {/each}
+            </ul>
+
+            {#if practices[activeTabIndex].cases}
+              <p><strong>案例成果：</strong>{practices[activeTabIndex].cases}</p>
+            {/if}
+          </article>
+        {/if}
+
+        <div class="cta-minimal">
+          <p>了解我们如何帮助您的企业</p>
+          <a href="/contact" class="cta-link">联系我们 →</a>
         </div>
-      {:else}
-        <!-- Fallback for practices without richContent -->
-        <div class="rich-content">
-          <h3>{practices[activeTabIndex].name_zh}</h3>
-          <p>{practices[activeTabIndex].description_zh}</p>
-
-          <h4>核心服务</h4>
-          <ul>
-            {#each practices[activeTabIndex].services as service}
-              <li>{service}</li>
-            {/each}
-          </ul>
-
-          {#if practices[activeTabIndex].cases}
-            <p><strong>案例成果：</strong>{practices[activeTabIndex].cases}</p>
-          {/if}
-        </div>
-      {/if}
-    </div>
-
-    <div class="cta-minimal">
-      <p>了解我们如何帮助您的企业</p>
-      <a href="/contact" class="cta-link">联系我们 →</a>
+      </div>
     </div>
   </section>
 
@@ -710,122 +700,103 @@
     }
   }
 
-  // Category Tabs
-  .category-tabs {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 2rem;
-    flex-wrap: wrap;
+  // Practices Layout: Sidebar + Main Content
+  .practices-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 3rem;
+    margin-top: 3rem;
   }
 
-  .category-tab {
-    padding: 0.625rem 1.5rem;
-    background: white;
-    border: 0.0625rem solid #e2e8f0;
-    border-radius: 2rem;
-    font-size: 0.875rem;
-    font-weight: 400;
-    color: #64748b;
-    cursor: pointer;
-    transition: all 0.3s ease;
-
-    &:hover {
-      border-color: $color-primary;
-      color: $color-primary;
-    }
-
-    &--active {
-      background: $color-primary;
-      border-color: $color-primary;
-      color: white;
-    }
+  // Left Sidebar
+  .practices-sidebar {
+    position: sticky;
+    top: 6rem;
+    height: fit-content;
   }
 
-  // Practices Tabs (horizontal scrollable)
-  .practices-tabs {
-    display: flex;
-    gap: 0.75rem;
-    overflow-x: auto;
-    overflow-y: visible;
-    margin-bottom: 2.5rem;
-    padding-bottom: 0.5rem;
-
-    &::-webkit-scrollbar {
-      height: 4px;
-    }
-
-    &::-webkit-scrollbar-track {
-      background: #f1f5f9;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background: #cbd5e1;
-      border-radius: 2px;
-    }
+  .sidebar-title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #94a3b8;
+    margin-bottom: 1.5rem;
+    padding-left: 1rem;
   }
 
-  .practice-tab {
+  .practices-nav {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    min-width: 140px;
-    padding: 1rem 1.25rem;
+    gap: 0.5rem;
+  }
+
+  .practice-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1rem 1rem;
     background: white;
-    border: 0.0625rem solid #e2e8f0;
+    border: 1px solid #e2e8f0;
     border-radius: 0.5rem;
     cursor: pointer;
     transition: all 0.3s ease;
-    text-align: center;
-    flex-shrink: 0;
+    text-align: left;
+    width: 100%;
 
     &:hover {
       border-color: $color-primary;
-      background: #fafafa;
-      transform: translateY(-2px);
+      background: #fafbfc;
+      transform: translateX(4px);
     }
 
     &--active {
       background: $color-primary;
       border-color: $color-primary;
       box-shadow: 0 4px 12px rgba(90, 154, 127, 0.2);
+      transform: translateX(4px);
 
-      .practice-tab-name,
-      .practice-tab-name-en {
+      .practice-nav-name,
+      .practice-nav-name-en {
         color: white;
       }
     }
   }
 
-  .practice-tab-name {
+  .practice-nav-name {
     font-size: 0.9375rem;
     font-weight: 500;
     color: #1e293b;
     margin-bottom: 0.25rem;
   }
 
-  .practice-tab-name-en {
-    font-size: 0.6875rem;
+  .practice-nav-name-en {
+    font-size: 0.75rem;
     font-weight: 300;
     color: #94a3b8;
     font-style: italic;
   }
 
-  // Practice Content Area
-  .practice-content {
-    background: white;
-    border: 0.0625rem solid #f1f5f9;
-    border-radius: 0.5rem;
-    padding: 2.5rem;
-    margin-bottom: 3rem;
+  // Right Main Content
+  .practices-main {
+    min-width: 0; // Fix overflow issue
   }
 
-  // Rich Content Styles
+  // Rich Content Styles - WYSIWYG Editor Output
   .rich-content {
+    background: white;
+    border: 1px solid #f1f5f9;
+    border-radius: 0.5rem;
+    padding: 2.5rem;
+    line-height: 1.8;
+    color: #475569;
+
+    // Headings
     :global(h3) {
       font-size: 1.75rem;
       font-weight: 500;
       color: $color-primary;
-      margin-bottom: 1.5rem;
+      margin: 0 0 1.5rem 0;
       line-height: 1.3;
     }
 
@@ -833,10 +804,18 @@
       font-size: 1.25rem;
       font-weight: 500;
       color: #334155;
-      margin: 2rem 0 1rem 0;
+      margin: 2.5rem 0 1rem 0;
       line-height: 1.4;
     }
 
+    :global(h5) {
+      font-size: 1.125rem;
+      font-weight: 500;
+      color: #475569;
+      margin: 2rem 0 0.75rem 0;
+    }
+
+    // Paragraphs
     :global(p) {
       font-size: 1rem;
       line-height: 1.8;
@@ -844,40 +823,172 @@
       margin-bottom: 1.5rem;
     }
 
+    // Lists
+    :global(ul),
+    :global(ol) {
+      padding-left: 2rem;
+      margin: 1.5rem 0;
+    }
+
     :global(ul) {
       list-style: none;
-      padding: 0;
-      margin: 1.5rem 0;
+
+      :global(li) {
+        position: relative;
+        padding-left: 1.5rem;
+
+        &::before {
+          content: '•';
+          position: absolute;
+          left: 0;
+          color: $color-primary;
+          font-weight: bold;
+          font-size: 1.25rem;
+        }
+      }
+    }
+
+    :global(ol) {
+      list-style: decimal;
+
+      :global(li) {
+        padding-left: 0.5rem;
+      }
     }
 
     :global(li) {
       font-size: 0.9375rem;
       line-height: 1.7;
       color: #475569;
-      padding: 0.75rem 0 0.75rem 2rem;
-      position: relative;
-
-      &::before {
-        content: '•';
-        position: absolute;
-        left: 0.75rem;
-        color: $color-primary;
-        font-weight: bold;
-        font-size: 1.25rem;
-      }
+      margin-bottom: 0.75rem;
     }
 
-    :global(strong) {
+    :global(strong),
+    :global(b) {
       font-weight: 600;
       color: #334155;
     }
 
+    :global(em),
+    :global(i) {
+      font-style: italic;
+    }
+
+    // Images - Default (center aligned)
     :global(img) {
-      width: 100%;
+      max-width: 100%;
       height: auto;
       border-radius: 0.5rem;
-      margin: 2rem 0;
+      margin: 2rem auto;
+      display: block;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    // Image alignment classes (from WYSIWYG editor)
+    :global(img.align-left) {
+      float: left;
+      margin: 0.5rem 2rem 1rem 0;
+      max-width: 50%;
+    }
+
+    :global(img.align-right) {
+      float: right;
+      margin: 0.5rem 0 1rem 2rem;
+      max-width: 50%;
+    }
+
+    :global(img.align-center) {
+      display: block;
+      margin: 2rem auto;
+      max-width: 100%;
+    }
+
+    // Blockquote
+    :global(blockquote) {
+      border-left: 4px solid $color-secondary;
+      padding-left: 1.5rem;
+      margin: 2rem 0;
+      font-style: italic;
+      color: #64748b;
+      background: #f8fafc;
+      padding: 1.5rem;
+      border-radius: 0 0.5rem 0.5rem 0;
+    }
+
+    // Tables
+    :global(table) {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 2rem 0;
+      font-size: 0.9375rem;
+    }
+
+    :global(th),
+    :global(td) {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    :global(th) {
+      background: #f8fafc;
+      font-weight: 600;
+      color: #334155;
+    }
+
+    :global(tr:hover) {
+      background: #fafbfc;
+    }
+
+    // Links
+    :global(a) {
+      color: $color-primary;
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.2s;
+
+      &:hover {
+        border-bottom-color: $color-primary;
+      }
+    }
+
+    // Code
+    :global(code) {
+      background: #f1f5f9;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+      font-family: 'Monaco', 'Courier New', monospace;
+      font-size: 0.875rem;
+      color: #334155;
+    }
+
+    :global(pre) {
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 1.5rem;
+      border-radius: 0.5rem;
+      overflow-x: auto;
+      margin: 2rem 0;
+
+      :global(code) {
+        background: none;
+        padding: 0;
+        color: inherit;
+      }
+    }
+
+    // Horizontal Rule
+    :global(hr) {
+      border: none;
+      border-top: 1px solid #e2e8f0;
+      margin: 3rem 0;
+    }
+
+    // Clear floats after images
+    &::after {
+      content: '';
+      display: table;
+      clear: both;
     }
   }
 
