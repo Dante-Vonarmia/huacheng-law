@@ -31,3 +31,4 @@ export { default as Tabs } from './Tabs.svelte';
 // 导航组件
 export { default as MinimalNav } from './MinimalNav.svelte';
 export { default as MegaMenu } from './MegaMenu.svelte';
+export { default as Picker } from './Picker.svelte';

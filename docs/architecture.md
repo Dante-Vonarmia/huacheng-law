@@ -486,5 +486,486 @@ npm run test:all         # 运行所有测试
 
 ---
 
-**最后更新**: 2025-11-03
-**文档版本**: v1.0
+## 12. Schema-Driven Architecture（模式驱动架构）
+
+### 12.1 核心理念
+
+华诚律师事务所门户网站采用 **Schema-Driven Architecture**，这是一种将内容结构与展示逻辑解耦的架构模式，核心思想是：
+
+> **所有动态内容由 JSON Schema 定义，前端只负责渲染，内容管理交给后台 CMS**
+
+**架构优势**:
+1. **内容与代码分离**: 内容更新无需修改代码或重新部署
+2. **天然多语言支持**: Schema 字段包含 `_zh`/`_en` 后缀，切换语言即切换字段
+3. **富文本标准化**: 后台编辑器输出 HTML → Adapter 转换 → 前端统一样式渲染
+4. **CRUD 友好**: 增删改查直接操作 Schema 对象数组
+
+---
+
+### 12.2 数据流
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                     后台 CMS                                 │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │          富文本编辑器（WYSIWYG）                      │  │
+│  │  - 输入中英文名称、描述                               │  │
+│  │  - 编辑富文本内容（插入图片、列表、表格）             │  │
+│  │  - 输出: HTML 字符串                                  │  │
+│  └──────────────────────────────────────────────────────┘  │
+└───────────────────────┬─────────────────────────────────────┘
+                        │ JSON Response
+                        │
+┌───────────────────────▼─────────────────────────────────────┐
+│                  Adapter Layer                               │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │  schema-map.json: 后台字段 → 前端字段映射            │  │
+│  │  - name.zh → name_zh                                 │  │
+│  │  - rich_content → richContent                        │  │
+│  └──────────────────────────────────────────────────────┘  │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │  api-client.ts: API 调用 + 字段转换                  │  │
+│  │  - fetchPractices(): PracticeSchema[]                │  │
+│  └──────────────────────────────────────────────────────┘  │
+└───────────────────────┬─────────────────────────────────────┘
+                        │ PracticeSchema[]
+                        │
+┌───────────────────────▼─────────────────────────────────────┐
+│               Frontend (SvelteKit)                           │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │  Picker 组件: Schema 容器                             │  │
+│  │  - tabs = schemas.map(s => ({ label: s.name_zh }))  │  │
+│  │  - 动态生成 Tab 列表                                  │  │
+│  └──────────────────────────────────────────────────────┘  │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │  Rich Content 渲染                                    │  │
+│  │  - <div class="rich-content">{@html schema.richContent}</div> │
+│  │  - 统一样式: .rich-content { ... }                   │  │
+│  └──────────────────────────────────────────────────────┘  │
+└──────────────────────────────────────────────────────────────┘
+```
+
+---
+
+### 12.3 Schema 定义规范
+
+#### 基础 Schema 结构
+
+所有 Schema 必须继承 `BaseSchema`:
+
+```typescript
+interface BaseSchema {
+  id: string;           // 唯一标识（UUID 或自增 ID）
+  slug: string;         // URL 友好标识（用于 SEO）
+  createdAt: string;    // 创建时间（ISO 8601）
+  updatedAt: string;    // 更新时间（ISO 8601）
+}
+```
+
+#### 业务领域 Schema 示例
+
+```typescript
+// adapter/schema/practice.ts
+interface PracticeSchema extends BaseSchema {
+  // 分类
+  category: '核心业务' | '行业专长' | '专业服务';
+
+  // 多语言字段（必填）
+  name_zh: string;             // 中文名称
+  name_en: string;             // 英文名称
+  description_zh: string;      // 中文简介（≤200字）
+  description_en: string;      // 英文简介（≤200字）
+
+  // 结构化数据
+  services: string[];          // 核心服务列表
+  cases?: string;              // 案例成果（可选）
+
+  // 富文本内容（可选）
+  richContent?: string;        // 后台编辑器输出的 HTML
+}
+```
+
+**字段设计原则**:
+1. **多语言字段使用后缀**: `_zh`/`_en`，不使用嵌套对象
+2. **富文本字段命名**: `richContent` (camelCase)
+3. **可选字段使用 `?`**: 明确区分必填和可选
+
+---
+
+### 12.4 Picker 组件作为 Schema 容器
+
+**为什么使用 Picker？**
+
+Picker 组件是 Schema-Driven Architecture 的核心交互组件，它的优势：
+
+1. **模块化**: 每个 Tab 对应一个 Schema 对象
+2. **CRUD 友好**: 增删改查 = 操作 Schema 数组
+3. **多语言原生支持**: Tab 标签从 `schema.name_zh` 或 `schema.name_en` 动态生成
+4. **灵活调度**: 排序、过滤、显示/隐藏 Tab 通过数组操作实现
+
+**代码示例**:
+
+```typescript
+// src/routes/(app)/practices/+page.svelte
+const practices: PracticeSchema[] = [
+  {
+    id: 'ip',
+    slug: 'intellectual-property',
+    category: '核心业务',
+    name_zh: '知识产权',
+    name_en: 'Intellectual Property',
+    description_zh: '专注于专利、商标、著作权等知识产权领域...',
+    description_en: 'Focus on IP protection...',
+    services: ['专利申请', '商标注册', '著作权登记'],
+    richContent: `<h3>知识产权法律服务</h3><p>...</p>`
+  },
+  // ... 更多业务领域
+];
+
+// 动态生成 Tabs
+const tabs = [
+  { id: 'intro', label: '简介', type: 'intro' },
+  ...practices.map(p => ({
+    id: p.id,
+    label: p.name_zh,  // 多语言切换时改为 p.name_en
+    type: 'practice',
+    data: p
+  }))
+];
+```
+
+**CRUD 操作示例**:
+
+```typescript
+// 新增业务领域
+practices = [...practices, newPractice];
+
+// 删除业务领域
+practices = practices.filter(p => p.id !== targetId);
+
+// 更新业务领域
+practices = practices.map(p =>
+  p.id === targetId ? { ...p, name_zh: '新名称' } : p
+);
+
+// 排序业务领域
+practices = practices.sort((a, b) => a.name_zh.localeCompare(b.name_zh));
+```
+
+---
+
+### 12.5 富文本内容渲染
+
+#### 渲染方式
+
+使用 Svelte 的 `{@html}` 指令渲染后台编辑器输出的 HTML:
+
+```svelte
+<div class="rich-content">
+  {@html practice.richContent}
+</div>
+```
+
+#### 统一样式系统
+
+`.rich-content` 样式类提供统一的富文本渲染样式:
+
+| 元素 | 样式特点 |
+|------|----------|
+| **标题** | `<h3>` 主标题、`<h4>` 子标题、`<h5>` 细节标题 |
+| **段落** | `<p>` 行高 1.8、间距 1.5rem |
+| **列表** | `<ul>` 自定义圆点（主题色）、`<ol>` 数字编号 |
+| **图片** | 默认居中、支持 `.align-left`/`.align-right`/`.align-center` |
+| **表格** | 斑马纹、悬停高亮 |
+| **引用** | 左侧金色边框、浅色背景 |
+| **代码** | 行内代码浅灰背景、代码块深色主题 |
+
+**样式示例**:
+
+```scss
+.rich-content {
+  :global(h3) {
+    font-size: 1.75rem;
+    color: $color-primary;
+    margin-bottom: 1.5rem;
+  }
+
+  :global(img) {
+    max-width: 100%;
+    height: auto;
+    margin: 2rem auto;
+    display: block;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  :global(img.align-left) {
+    float: left;
+    margin: 0.5rem 2rem 1rem 0;
+    max-width: 50%;
+  }
+}
+```
+
+#### XSS 防护
+
+**生产环境必须净化 HTML**:
+
+```typescript
+import DOMPurify from 'dompurify';
+
+const safeHTML = DOMPurify.sanitize(practice.richContent, {
+  ALLOWED_TAGS: ['h3', 'h4', 'h5', 'p', 'ul', 'ol', 'li', 'strong', 'em', 'a', 'img', 'table', 'thead', 'tbody', 'tr', 'th', 'td', 'blockquote', 'code', 'pre'],
+  ALLOWED_ATTR: ['href', 'src', 'alt', 'class', 'target']
+});
+```
+
+---
+
+### 12.6 Adapter 层设计
+
+#### `schema-map.json` - 字段映射表
+
+定义后台字段到前端 Schema 字段的映射关系:
+
+```json
+{
+  "practice": {
+    "id": "id",
+    "slug": "slug",
+    "category": "category",
+    "name.zh": "name_zh",
+    "name.en": "name_en",
+    "description.zh": "description_zh",
+    "description.en": "description_en",
+    "services": "services",
+    "cases": "cases",
+    "rich_content": "richContent",
+    "created_at": "createdAt",
+    "updated_at": "updatedAt"
+  }
+}
+```
+
+**映射规则**:
+- 支持嵌套路径（点分）: `name.zh` → `name_zh`
+- 支持下划线转驼峰: `rich_content` → `richContent`
+- 支持数组字段: 直接映射
+
+#### `api-client.ts` - API 客户端
+
+封装所有 API 调用，统一进行字段转换:
+
+```typescript
+import schemaMap from './schema-map.json';
+import { transformFields } from './utils';
+
+export async function fetchPractices(): Promise<PracticeSchema[]> {
+  try {
+    const response = await fetch('/api/v1/practices');
+    const rawData = await response.json();
+
+    // 使用 schema-map 转换字段
+    return rawData.map(item => transformFields(item, schemaMap.practice));
+  } catch (error) {
+    console.error('Failed to fetch practices:', error);
+    return [];  // 返回空数组，不中断页面渲染
+  }
+}
+```
+
+**错误处理策略**:
+- 网络错误: 返回空数组 `[]`
+- 字段缺失: 使用默认值（空字符串、空数组）
+- 类型错误: 记录日志并跳过该条数据
+
+---
+
+### 12.7 多语言架构
+
+#### URL 结构
+
+使用路径前缀区分语言:
+
+```
+/zh/practices  → 中文业务领域页
+/en/practices  → 英文业务领域页
+```
+
+#### 语言切换逻辑
+
+根据当前语言切换 Schema 字段:
+
+```typescript
+// $state
+let currentLang = $state<'zh' | 'en'>('zh');
+
+// $derived
+const displayName = $derived(
+  currentLang === 'zh' ? practice.name_zh : practice.name_en
+);
+
+const displayDescription = $derived(
+  currentLang === 'zh' ? practice.description_zh : practice.description_en
+);
+
+// Tab 标签动态生成
+const tabs = practices.map(p => ({
+  id: p.id,
+  label: currentLang === 'zh' ? p.name_zh : p.name_en,
+  data: p
+}));
+```
+
+#### SEO 多语言支持
+
+每个页面必须包含 `hreflang` 标签:
+
+```svelte
+<svelte:head>
+  <link rel="alternate" hreflang="zh-CN" href="https://example.com/zh/practices" />
+  <link rel="alternate" hreflang="en-US" href="https://example.com/en/practices" />
+  <link rel="alternate" hreflang="x-default" href="https://example.com/zh/practices" />
+</svelte:head>
+```
+
+---
+
+### 12.8 实施示例：业务领域页面
+
+**文件结构**:
+```
+src/routes/(app)/practices/
+├── +page.svelte         # 页面组件
+├── +page.ts             # 数据加载
+└── schema.ts            # Schema 定义（仅供参考）
+```
+
+**数据流**:
+
+```typescript
+// +page.ts
+import { fetchPractices } from '$lib/adapter/api-client';
+
+export async function load() {
+  const practices = await fetchPractices();
+  return { practices };
+}
+```
+
+```svelte
+<!-- +page.svelte -->
+<script lang="ts">
+  import { Picker } from '$ui/components';
+
+  let { data } = $props();
+  let practices = $state(data.practices);
+  let activeTabIndex = $state(0);
+
+  const tabs = [
+    { id: 'intro', label: '简介', type: 'intro' },
+    ...practices.map(p => ({
+      id: p.id,
+      label: p.name_zh,
+      type: 'practice',
+      data: p
+    }))
+  ];
+</script>
+
+<!-- Picker 组件 -->
+<Picker
+  items={tabs}
+  activeIndex={activeTabIndex}
+  orientation="horizontal"
+  onSelect={(index) => activeTabIndex = index}
+/>
+
+<!-- 内容渲染 -->
+<div class="content">
+  {#if activeTabIndex === 0}
+    <!-- 简介内容 -->
+  {:else}
+    {@const practice = practices[activeTabIndex - 1]}
+    <div class="rich-content">
+      {@html practice.richContent}
+    </div>
+  {/if}
+</div>
+```
+
+---
+
+### 12.9 扩展场景
+
+#### 新增内容类型
+
+添加新的内容类型（如案例研究）只需三步:
+
+1. **定义 Schema**:
+```typescript
+// adapter/schema/case-study.ts
+interface CaseStudySchema extends BaseSchema {
+  title_zh: string;
+  title_en: string;
+  summary_zh: string;
+  summary_en: string;
+  richContent?: string;
+}
+```
+
+2. **添加 Adapter**:
+```typescript
+// adapter/api-client.ts
+export async function fetchCaseStudies(): Promise<CaseStudySchema[]> {
+  // ...
+}
+```
+
+3. **创建页面**:
+```svelte
+<!-- src/routes/(app)/case-studies/+page.svelte -->
+<!-- 使用 Picker 组件 + rich-content 渲染 -->
+```
+
+#### 动态分类筛选
+
+通过 Schema 的 `category` 字段实现:
+
+```typescript
+const categories = [...new Set(practices.map(p => p.category))];
+
+const filteredPractices = practices.filter(p =>
+  selectedCategory === 'all' || p.category === selectedCategory
+);
+```
+
+---
+
+### 12.10 优势总结
+
+| 传统架构 | Schema-Driven Architecture |
+|---------|---------------------------|
+| 内容耦合在组件代码中 | 内容与代码完全分离 |
+| 更新内容需要重新部署 | 后台编辑即可，前端自动渲染 |
+| 多语言需要复杂 i18n | 原生多语言字段支持 |
+| 富文本样式不统一 | 统一的 `.rich-content` 样式 |
+| CRUD 需要前后端协同 | 直接操作 Schema 数组 |
+| 难以维护和扩展 | 模块化、易扩展 |
+
+---
+
+### 12.11 最佳实践
+
+1. **Schema First**: 先定义 Schema，再开发组件
+2. **单一数据源**: 所有动态内容都从 Schema 读取
+3. **字段命名规范**: 严格遵循 `_zh`/`_en` 后缀约定
+4. **富文本净化**: 生产环境必须使用 DOMPurify
+5. **错误降级**: API 失败时返回空数组，不中断页面渲染
+6. **类型安全**: 所有 Schema 都有 TypeScript 类型定义
+7. **文档同步**: Schema 变更时同步更新文档
+
+---
+
+**最后更新**: 2025-11-11
+**文档版本**: v2.0

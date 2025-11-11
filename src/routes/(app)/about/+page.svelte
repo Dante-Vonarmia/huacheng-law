@@ -382,7 +382,7 @@
     color: white;
     text-align: center;
     overflow: hidden;
-    margin-bottom: 5rem;
+    margin-bottom: 2rem;
   }
 
   .hero-banner__bg {
@@ -611,7 +611,7 @@
   .content-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 3rem;
+    gap: 4rem 6rem;
     margin-bottom: 5rem;
   }
 
@@ -677,20 +677,27 @@
     }
   }
 
-  // Timeline Minimal
+  // Timeline Minimal - Desktop horizontal layout
   .timeline-minimal {
-    border-left: 0.0625rem solid #e2e8f0;
-    padding-left: 2.5rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3rem 4rem;
+    margin-top: 2rem;
+
+    @media (min-width: 1024px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
   }
 
   .timeline-item-minimal {
-    margin-bottom: 3rem;
     position: relative;
+    padding-left: 2rem;
+    border-left: 0.125rem solid #e2e8f0;
 
     &::before {
       content: '';
       position: absolute;
-      left: -2.75rem;
+      left: -0.3125rem;
       top: 0.375rem;
       width: 0.4375rem;
       height: 0.4375rem;
@@ -699,20 +706,19 @@
     }
 
     &--highlight {
+      border-left-color: rgba(90, 154, 127, 0.3);
+
       &::before {
         background: $color-primary;
         width: 0.5625rem;
         height: 0.5625rem;
-        left: -2.8125rem;
+        left: -0.375rem;
+        box-shadow: 0 0 0 0.25rem rgba(90, 154, 127, 0.1);
       }
 
       .timeline-year {
         color: $color-primary;
       }
-    }
-
-    &:last-child {
-      margin-bottom: 0;
     }
   }
 
@@ -739,20 +745,22 @@
     }
   }
 
-  // Values List
+  // Values List - Desktop 2-column layout
   .values-list {
-    display: flex;
-    flex-direction: column;
-    gap: 3rem;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3rem 5rem;
   }
 
   .value-item {
-    padding-bottom: 3rem;
-    border-bottom: 0.0625rem solid #f1f5f9;
+    padding: 2rem;
+    border: 0.0625rem solid #f1f5f9;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
 
-    &:last-child {
-      border-bottom: none;
-      padding-bottom: 0;
+    &:hover {
+      border-color: #e2e8f0;
+      box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.04);
     }
   }
 
@@ -779,20 +787,15 @@
     max-width: 43.75rem;
   }
 
-  // Honors List
+  // Honors List - Desktop 2-column layout
   .honors-list {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem 4rem;
   }
 
   .honor-item {
-    padding: 2rem 0;
-    border-bottom: 0.0625rem solid #f1f5f9;
-
-    &:last-child {
-      border-bottom: none;
-    }
+    padding: 1.5rem 0;
   }
 
   .honor-year {
@@ -833,13 +836,21 @@
 
   .probono-stats {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 3rem;
   }
 
   .probono-stat {
-    padding: 2.5rem 0;
-    border-bottom: 0.0625rem solid #f1f5f9;
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+    border: 0.0625rem solid #f1f5f9;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+
+    &:hover {
+      border-color: #e2e8f0;
+      transform: translateY(-0.25rem);
+    }
   }
 
   .probono-stat-number {
@@ -856,20 +867,23 @@
     color: #94a3b8;
   }
 
-  // Locations
+  // Locations - Desktop 3-column layout
   .locations-list {
-    display: flex;
-    flex-direction: column;
-    gap: 2.5rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3rem;
     margin-bottom: 6.25rem;
   }
 
   .location-item {
-    padding: 2rem 0;
-    border-bottom: 0.0625rem solid #f1f5f9;
+    padding: 2.5rem 2rem;
+    border: 0.0625rem solid #e2e8f0;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
 
-    &:last-child {
-      border-bottom: none;
+    &:hover {
+      border-color: $color-primary;
+      box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.06);
     }
 
     h4 {
@@ -944,8 +958,32 @@
       padding: 5rem 2.5rem;
     }
 
-    .content-grid,
+    .content-grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .timeline-minimal {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2.5rem;
+    }
+
+    .values-list {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .honors-list {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
     .probono-stats {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+    }
+
+    .locations-list {
       grid-template-columns: 1fr;
       gap: 2rem;
     }
@@ -969,19 +1007,25 @@
       font-size: 2rem;
     }
 
+    .timeline-minimal {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
     .stats-row {
       grid-template-columns: 1fr;
       gap: 1.5rem;
       padding: 2.5rem 0;
     }
 
+    .probono-stats {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
     .content-section {
       min-height: auto;
       padding: 3.75rem 0;
-    }
-
-    .timeline-minimal {
-      padding-left: 1.5rem;
     }
   }
 </style>

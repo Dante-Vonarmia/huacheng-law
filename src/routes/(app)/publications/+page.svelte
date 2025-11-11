@@ -16,7 +16,9 @@
 
   const sections = [
     { id: 'intro', label: '简介' },
-    { id: 'publications', label: '出版物' }
+    { id: 'publications', label: '出版物' },
+    { id: 'articles', label: '专业文章' },
+    { id: 'news', label: '法律新闻' }
   ];
 
   // Derived filtered publications
@@ -248,6 +250,96 @@
     <div class="cta-minimal">
       <p>获取更多专业出版物信息</p>
       <a href="/contact" class="cta-link">联系我们 →</a>
+    </div>
+  </section>
+
+  <!-- Section THREE: Professional Articles -->
+  <section class="content-section" id="articles">
+    <div class="section-number">THREE</div>
+    <div class="section-explore">ARTICLES</div>
+
+    <h2 class="section-title-alt">专业文章</h2>
+    <p class="section-subtitle">法律分析与行业洞察</p>
+
+    <div class="articles-grid">
+      <div class="article-card">
+        <div class="article-badge">知识产权</div>
+        <h3 class="article-title">人工智能时代的专利保护策略</h3>
+        <p class="article-desc">探讨AI技术发展对专利保护带来的挑战与机遇，为企业提供前瞻性的知识产权布局建议。</p>
+        <div class="article-meta">
+          <span>张明华</span>
+          <span class="meta-separator">•</span>
+          <span>2024-10-20</span>
+        </div>
+      </div>
+
+      <div class="article-card">
+        <div class="article-badge">公司法务</div>
+        <h3 class="article-title">跨境并购中的合规风险管理</h3>
+        <p class="article-desc">分析跨境并购交易中的主要合规风险点，提供系统化的风险防控方案。</p>
+        <div class="article-meta">
+          <span>李静</span>
+          <span class="meta-separator">•</span>
+          <span>2024-10-15</span>
+        </div>
+      </div>
+
+      <div class="article-card">
+        <div class="article-badge">金融法</div>
+        <h3 class="article-title">数字货币监管政策解读</h3>
+        <p class="article-desc">深度解读最新数字货币监管政策，为金融机构提供合规指引。</p>
+        <div class="article-meta">
+          <span>刘伟</span>
+          <span class="meta-separator">•</span>
+          <span>2024-10-08</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="view-more-section">
+      <a href="/news" class="view-more-link">查看更多文章 →</a>
+    </div>
+  </section>
+
+  <!-- Section FOUR: Legal News -->
+  <section class="content-section content-section--last" id="news">
+    <div class="section-number">FOUR</div>
+    <div class="section-explore">LEGAL NEWS</div>
+
+    <h2 class="section-title-alt">法律新闻</h2>
+    <p class="section-subtitle">最新法律动态与行业资讯</p>
+
+    <div class="news-timeline">
+      <div class="timeline-item">
+        <div class="timeline-date">2024-11-01</div>
+        <div class="timeline-content">
+          <span class="timeline-tag">法律法规</span>
+          <h3 class="timeline-title">新公司法正式实施，企业需关注的五大变化</h3>
+          <p class="timeline-desc">新修订的《公司法》于2024年7月1日正式实施，企业需重点关注注册资本制度、股东权利保护等方面的重大变化。</p>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-date">2024-10-25</div>
+        <div class="timeline-content">
+          <span class="timeline-tag">知识产权</span>
+          <h3 class="timeline-title">最高法发布知识产权司法保护新规</h3>
+          <p class="timeline-desc">最高人民法院发布知识产权保护新司法解释，进一步加强对知识产权权利人的保护力度。</p>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-date">2024-10-18</div>
+        <div class="timeline-content">
+          <span class="timeline-tag">数据合规</span>
+          <h3 class="timeline-title">网信办发布数据出境安全评估新规</h3>
+          <p class="timeline-desc">国家网信办发布数据出境安全评估新规，对数据出境的安全评估程序和标准进行了明确规定。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="view-more-section">
+      <a href="/news/legal" class="view-more-link">查看更多新闻 →</a>
     </div>
   </section>
 
@@ -717,6 +809,179 @@
     &:hover {
       border-color: $color-primary;
       background: rgba(90, 154, 127, 0.03);
+    }
+  }
+
+  // Articles Grid
+  .articles-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-bottom: 3rem;
+
+    @media (max-width: 1024px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 640px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .article-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 2rem;
+    border: 0.0625rem solid #e2e8f0;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+
+    &:hover {
+      border-color: $color-primary;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      transform: translateY(-4px);
+    }
+  }
+
+  .article-badge {
+    display: inline-block;
+    align-self: flex-start;
+    padding: 0.375rem 0.875rem;
+    background: rgba($color-primary, 0.1);
+    color: $color-primary;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    border-radius: 0.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .article-title {
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: #1e293b;
+    line-height: 1.4;
+    margin: 0;
+  }
+
+  .article-desc {
+    font-size: 0.875rem;
+    font-weight: 300;
+    line-height: 1.7;
+    color: #64748b;
+    margin: 0;
+    flex-grow: 1;
+  }
+
+  .article-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8125rem;
+    color: #94a3b8;
+    padding-top: 1rem;
+    border-top: 0.0625rem solid #f1f5f9;
+
+    .meta-separator {
+      color: #cbd5e1;
+    }
+  }
+
+  // News Timeline
+  .news-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .timeline-item {
+    display: grid;
+    grid-template-columns: 7.5rem 1fr;
+    gap: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 0.0625rem solid #f1f5f9;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+  }
+
+  .timeline-date {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: #1e293b;
+    letter-spacing: -0.01em;
+
+    @media (max-width: 768px) {
+      font-size: 0.8125rem;
+    }
+  }
+
+  .timeline-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .timeline-tag {
+    display: inline-block;
+    align-self: flex-start;
+    padding: 0.25rem 0.75rem;
+    background: rgba($color-primary, 0.08);
+    color: $color-primary;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    border-radius: 0.25rem;
+  }
+
+  .timeline-title {
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: #1e293b;
+    line-height: 1.4;
+    margin: 0;
+  }
+
+  .timeline-desc {
+    font-size: 0.875rem;
+    font-weight: 300;
+    line-height: 1.7;
+    color: #64748b;
+    margin: 0;
+  }
+
+  // View More Section
+  .view-more-section {
+    display: flex;
+    justify-content: center;
+    padding-top: 2rem;
+    border-top: 0.0625rem solid #e2e8f0;
+  }
+
+  .view-more-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: $color-primary;
+    text-decoration: none;
+    padding: 0.75rem 1.5rem;
+    border: 0.0625rem solid #e2e8f0;
+    border-radius: 0.375rem;
+    transition: all 0.3s ease;
+
+    &:hover {
+      border-color: $color-primary;
+      background: rgba(90, 154, 127, 0.03);
+      gap: 0.75rem;
     }
   }
 

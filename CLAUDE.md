@@ -44,29 +44,64 @@ npm run test:all              # Run all QA tests
 
 ### Critical Architectural Patterns
 
-#### 1. Adapter Layer Pattern
+#### 1. Schema-Driven Architecture ⭐ NEW
+**Core Principle**: All dynamic content is defined by JSON Schema, frontend only renders.
+
+**Why this approach**:
+- Backend uses rich text HTML editor for content management
+- Native multi-language support via `_zh`/`_en` field suffixes
+- Modular CRUD operations on schema object arrays
+- Content updates without code changes
+
+**Key components**:
+- **Schema Definition**: TypeScript interfaces with multi-language fields
+- **Picker Component**: Acts as schema container, each tab = one schema object
+- **Rich Content Rendering**: Unified `.rich-content` styles for HTML from backend editor
+- **Adapter Layer**: Transforms backend fields to frontend schema
+
+**Example**:
+```typescript
+interface PracticeSchema {
+  id: string;
+  slug: string;
+  category: string;
+  name_zh: string;        // Chinese name
+  name_en: string;        // English name
+  description_zh: string;
+  description_en: string;
+  services: string[];
+  richContent?: string;   // HTML from backend editor
+}
+```
+
+See `docs/architecture.md` §12 for full details.
+
+#### 2. Adapter Layer Pattern
 The `adapter/` directory handles all backend integration:
-- `schema-map.json`: Maps legacy backend fields to frontend types
+- `schema-map.json`: Maps legacy backend fields to frontend schema fields
 - `api-client.ts`: Wraps all API calls with field transformation
+- `schema/`: TypeScript schema definitions (practice.ts, lawyer.ts, etc.)
 - `mock-data/`: Development data matching production API structure
 
-**Why**: Isolates backend coupling, allowing frontend to work with clean types while supporting legacy APIs.
+**Why**: Isolates backend coupling, allowing frontend to work with clean Schema types while supporting legacy APIs.
 
-#### 2. UI Kit Separation
+#### 3. UI Kit Separation
 `ui-kit/` is a standalone component library separate from `src/`:
 - `ui-kit/components/`: Reusable Svelte components (base, layout, domain)
 - `ui-kit/styles/`: SCSS variable system (colors, spacing, typography)
 
 **Why**: Components are reusable across projects and maintain consistent branding.
 
-#### 3. Multi-language Architecture
+#### 4. Multi-language Architecture
 - `locales/zh.json` and `locales/en.json`: Translation files
 - URL structure: `/zh/*` and `/en/*` routes
 - Each page template consumes translations via shared i18n utility
 
 **Why**: Full bilingual support (Chinese/English) for international law firm.
 
-#### 4. Rendering Strategy by Content Type
+**Schema-Driven Multi-language**: Use `_zh`/`_en` field suffixes in Schema (e.g., `name_zh`, `name_en`) instead of nested locale objects.
+
+#### 5. Rendering Strategy by Content Type
 - **SSG** (Static): About, Practice Areas (stable content, SEO priority)
 - **SSR** (Server): Lawyers, News, Events (dynamic content, up-to-date data)
 - **CSR** (Client): Search, Forms (user interaction)
@@ -177,14 +212,23 @@ Ensure these relationships are maintained via entity IDs in adapter layer.
 3. **Don't inline styles** - Use SCSS variables and modules
 4. **Don't forget bilingual content** - Every text string needs zh/en versions
 5. **Don't ignore SSG/SSR strategy** - Use appropriate rendering per page type (see architecture.md §5)
+6. **Don't hard-code dynamic content** - Use Schema objects for all CMS-managed content
+7. **Don't nest multi-language fields** - Use `name_zh`/`name_en` suffixes, not `name: { zh: '', en: '' }`
+8. **Don't skip HTML sanitization** - Always use DOMPurify for rich text content in production
+9. **Don't couple components with data** - Components should accept Schema props, not fetch data directly
 
 ## Development Workflow
 
 1. Check `TASKS.md` for current phase and assigned work
-2. For UI work: Start with `ui-kit/` components before `src/routes/`
-3. For pages: Use Design Agent's components, never rebuild common UI
-4. For backend integration: Update `adapter/schema-map.json` first, then types
-5. Before marking complete: Run `npm run test:all` for QA validation
+2. **For Schema-Driven pages**:
+   - Define Schema interface first in `adapter/schema/`
+   - Add field mapping in `adapter/schema-map.json`
+   - Implement API client function in `adapter/api-client.ts`
+   - Create page with Picker component and rich-content rendering
+3. For UI work: Start with `ui-kit/` components before `src/routes/`
+4. For pages: Use Design Agent's components, never rebuild common UI
+5. For backend integration: Update `adapter/schema-map.json` first, then types
+6. Before marking complete: Run `npm run test:all` for QA validation
 
 ## File Naming Patterns
 

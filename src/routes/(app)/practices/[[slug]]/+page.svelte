@@ -1,17 +1,12 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { page } from '$app/stores';
 
-  let activeSection = $state(0);
   let scrollY = $state(0);
+  let activeSection = $state(0); // 0 = 简介, 1-13 = 业务领域
   let showVerticalNav = $state(false);
-  let activeTabIndex = $state(0);
 
-  const sections = [
-    { id: 'intro', label: '简介' },
-    { id: 'practices', label: '领域' }
-  ];
-
- // 定义业务领域数据（保留原有数据）
+  // 定义业务领域数据（保留原有数据）
   const practices = [
     {
       id: 'ip',
@@ -225,18 +220,16 @@
     }
   ];
 
-  // Filter state
-  let selectedCategory = $state('全部');
-  const categories = ['全部', '核心业务', '行业专长', '专业服务'];
+  // 创建sections：简介 + 13个业务领域
+  const sections = [
+    { id: 'intro', label: '简介' },
+    ...practices.map(p => ({
+      id: p.id,
+      label: p.name_zh
+    }))
+  ];
 
-  // Filtered practices
-  const filteredPractices = $derived(() => {
-    if (selectedCategory === '全部') {
-      return practices;
-    }
-    return practices.filter(p => p.category === selectedCategory);
-  });
-
+  // 滚动到指定section
   function scrollToSection(index: number) {
     const section = document.getElementById(sections[index].id);
     if (section) {
@@ -254,8 +247,11 @@
   onMount(() => {
     const handleScroll = () => {
       scrollY = window.scrollY;
+
+      // 显示垂直导航
       showVerticalNav = scrollY > window.innerHeight * 0.8;
 
+      // 更新active section
       const sectionElements = sections.map(s => document.getElementById(s.id));
       const scrollPosition = window.scrollY + window.innerHeight / 3;
 
@@ -295,7 +291,7 @@
         class:active={activeSection === index}
         onclick={() => scrollToSection(index)}
       >
-        <span class="nav-label">{section.label}</span>
+        {section.label}
       </button>
     {/each}
   </nav>
@@ -303,141 +299,100 @@
 
 <!-- Vertical Navigation (shows after scroll) -->
 {#if showVerticalNav}
-<nav class="vertical-nav">
-  <div class="vertical-nav__inner">
-    {#each sections as section, index}
-      <button
-        class="vertical-nav__item"
-        class:active={activeSection === index}
-        onclick={() => scrollToSection(index)}
-      >
-        {section.label}
-      </button>
-    {/each}
-  </div>
-</nav>
+  <nav class="vertical-nav">
+    <div class="vertical-nav__inner">
+      {#each sections as section, index}
+        <button
+          class="vertical-nav__item"
+          class:active={activeSection === index}
+          onclick={() => scrollToSection(index)}
+        >
+          {section.label}
+        </button>
+      {/each}
+    </div>
+  </nav>
 {/if}
 
 <!-- Main Content -->
 <div class="page-content">
 
-  <!-- Section ONE: Introduction -->
+  <!-- Section INTRO: 简介 -->
   <section class="content-section" id="intro">
-    <div class="section-number">简介</div>
-    <div class="section-explore">PRACTICES</div>
+    <div class="section-number">INTRO</div>
+    <div class="section-explore">EXPLORE</div>
 
-    <h1 class="section-title">
-      "专注核心领域，<br>
-      提供卓越法律服务"
-    </h1>
+    <h2 class="section-title">
+      "专业沉淀，全方位法律服务解决方案"
+    </h2>
 
     <p class="section-intro">
       华诚律师事务所在知识产权、公司法、金融法、诉讼仲裁等多个专业领域拥有深厚的专业积累。我们的律师团队始终秉承专业、高效、务实的服务理念，为客户提供全方位的法律解决方案。
     </p>
 
-    <div class="stats-minimal">
-      <div class="stat-minimal">
+    <div class="stats-row">
+      <div class="stat-item">
         <div class="stat-number">13</div>
         <div class="stat-label">业务领域</div>
       </div>
-      <div class="stat-minimal">
+      <div class="stat-item">
         <div class="stat-number">100+</div>
         <div class="stat-label">专业律师</div>
       </div>
-      <div class="stat-minimal">
+      <div class="stat-item">
         <div class="stat-number">1000+</div>
         <div class="stat-label">成功案例</div>
       </div>
     </div>
 
     <div class="narrative-text">
-      <p>
-        从传统法律业务到新兴领域，从国内法律服务到跨境法律事务，华诚律师事务所始终走在行业前沿，为客户创造价值，助力客户实现商业目标。
-      </p>
+      <p>自成立以来，华诚已为数千家国内外企业提供专业法律服务，业务涵盖13个核心领域，累计处理案件超过10000件，客户满意度持续保持在95%以上。</p>
+      <p>我们深知每个客户的需求都是独特的，因此我们致力于提供量身定制的法律解决方案，确保客户在复杂的法律环境中获得最大的商业价值和法律保护。</p>
     </div>
   </section>
 
-  <!-- Section TWO: Practices -->
-  <section class="content-section content-section--last" id="practices">
-    <div class="section-number">领域</div>
-    <div class="section-explore">EXPERTISE</div>
+  <!-- 13个业务领域 -->
+  {#each practices as practice, index}
+    <section class="content-section" id={practice.id}>
+      <div class="section-number">{String(index + 1).padStart(2, '0')}</div>
+      <div class="section-explore">EXPLORE</div>
 
-    <h2 class="section-title-alt">业务领域</h2>
-    <p class="section-subtitle">专业深耕·全面覆盖</p>
+      <article class="practice-detail">
+        <div class="practice-detail-header">
+          <div class="practice-category">{practice.category}</div>
+          <h2 class="practice-detail-title">{practice.name_zh}</h2>
+          <p class="practice-detail-subtitle">{practice.name_en}</p>
+        </div>
 
-    <!-- Practice Area Tabs -->
-    <div class="practice-tabs-wrapper">
-      <div class="practice-tabs">
-        {#each practices as practice, index}
-          <button
-            class="practice-tab-item"
-            class:practice-tab-item--active={activeTabIndex === index}
-            onclick={() => activeTabIndex = index}
-          >
-            <div class="practice-tab-icon">
-              {#if practice.id === 'ip'}
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
-                </svg>
-              {:else if practice.id === 'corporate'}
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                </svg>
-              {:else if practice.id === 'data'}
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M12 2v20M2 12h20"/>
-                  <circle cx="12" cy="12" r="10"/>
-                </svg>
-              {:else}
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-                  <path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
-                </svg>
-              {/if}
-            </div>
-            <span class="practice-tab-label">{practice.name_zh}</span>
-          </button>
-        {/each}
-      </div>
-    </div>
-
-    <!-- Selected Practice Content -->
-    <div class="practice-content-area">
-      {#if practices[activeTabIndex]}
-        <article class="practice-detail">
-          <div class="practice-detail-header">
-            <h3 class="practice-detail-title">{practices[activeTabIndex].name_zh}</h3>
-            <p class="practice-detail-subtitle">{practices[activeTabIndex].name_en}</p>
+        {#if practice.richContent}
+          <div class="rich-content">
+            {@html practice.richContent}
           </div>
+        {:else}
+          <div class="rich-content">
+            <p>{practice.description_zh}</p>
 
-          {#if practices[activeTabIndex].richContent}
-            <div class="rich-content">
-              {@html practices[activeTabIndex].richContent}
-            </div>
-          {:else}
-            <div class="rich-content">
-              <p>{practices[activeTabIndex].description_zh}</p>
+            <h4>核心服务</h4>
+            <ul>
+              {#each practice.services as service}
+                <li>{service}</li>
+              {/each}
+            </ul>
 
-              <h4>核心服务</h4>
-              <ul>
-                {#each practices[activeTabIndex].services as service}
-                  <li>{service}</li>
-                {/each}
-              </ul>
+            {#if practice.cases}
+              <p><strong>案例成果：</strong>{practice.cases}</p>
+            {/if}
+          </div>
+        {/if}
+      </article>
+    </section>
+  {/each}
 
-              {#if practices[activeTabIndex].cases}
-                <p><strong>案例成果：</strong>{practices[activeTabIndex].cases}</p>
-              {/if}
-            </div>
-          {/if}
-        </article>
-      {/if}
-    </div>
-
-    <div class="cta-minimal">
-      <p>了解我们如何帮助您的企业</p>
-      <a href="/contact" class="cta-link">联系我们 →</a>
-    </div>
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <h3>了解我们如何帮助您的企业</h3>
+    <p>专业团队随时为您提供法律咨询服务</p>
+    <a href="/contact" class="cta-button">联系我们 →</a>
   </section>
 
 </div>
@@ -448,16 +403,13 @@
   // Hero Banner
   .hero-banner {
     position: relative;
-    height: 60vh;
-    min-height: 28rem;
-    max-height: 40rem;
+    min-height: 85vh;
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
     text-align: center;
     overflow: hidden;
-    margin-bottom: 5rem;
   }
 
   .hero-banner__bg {
@@ -473,8 +425,8 @@
   .hero-banner__content {
     position: relative;
     z-index: 2;
-    max-width: 50rem;
-    padding: 0 1.5rem;
+    max-width: 60rem;
+    padding: 0 2rem;
   }
 
   .hero-banner__label {
@@ -504,32 +456,32 @@
     line-height: 1.6;
   }
 
-  // Horizontal Navigation (inside hero)
+  // Horizontal Navigation
   .horizontal-nav {
     position: absolute;
-    bottom: 3rem;
+    bottom: 2rem;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
-    gap: 3rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem 2rem;
     z-index: 3;
+    max-width: 90%;
   }
 
   .horizontal-nav__item {
+    flex-shrink: 0;
     background: none;
     border: none;
+    font-size: 0.9rem;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.5);
     cursor: pointer;
-    transition: all 0.2s;
+    transition: color 0.2s;
     padding: 0.5rem 0;
     position: relative;
-
-    .nav-label {
-      font-size: 0.875rem;
-      font-weight: 400;
-      color: rgba(255, 255, 255, 0.8);
-      letter-spacing: 0.05em;
-      transition: color 0.2s;
-    }
+    white-space: nowrap;
 
     &::after {
       content: '';
@@ -537,16 +489,18 @@
       bottom: 0;
       left: 0;
       right: 0;
-      height: 1px;
+      height: 2px;
       background: white;
       transform: scaleX(0);
       transition: transform 0.3s ease;
     }
 
-    &:hover, &.active {
-      .nav-label {
-        color: white;
-      }
+    &:hover {
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    &.active {
+      color: white;
 
       &::after {
         transform: scaleX(1);
@@ -567,6 +521,7 @@
     display: flex;
     flex-direction: column;
     gap: 2rem;
+    align-items: flex-start;
   }
 
   .vertical-nav__item {
@@ -622,10 +577,6 @@
   .content-section {
     padding: 1.5rem 0;
     position: relative;
-
-    &--last {
-      padding-bottom: 2rem;
-    }
   }
 
   .section-number {
@@ -654,22 +605,6 @@
     letter-spacing: -0.01em;
   }
 
-  .section-title-alt {
-    font-size: 3rem;
-    font-weight: 300;
-    line-height: 1.2;
-    color: #1e293b;
-    margin-bottom: 1rem;
-    letter-spacing: -0.02em;
-  }
-
-  .section-subtitle {
-    font-size: 1rem;
-    font-weight: 300;
-    color: #94a3b8;
-    margin-bottom: 3.75rem;
-  }
-
   .section-intro {
     font-size: 0.875rem;
     font-weight: 300;
@@ -678,18 +613,18 @@
     margin-bottom: 3.75rem;
   }
 
-  // Stats Minimal
-  .stats-minimal {
+  // Stats
+  .stats-row {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 2.5rem;
-    margin-bottom: 3.75rem;
+    margin-bottom: 5rem;
     padding: 3.75rem 0;
     border-top: 0.0625rem solid #e2e8f0;
     border-bottom: 0.0625rem solid #e2e8f0;
   }
 
-  .stat-minimal {
+  .stat-item {
     text-align: center;
   }
 
@@ -723,116 +658,84 @@
     }
   }
 
-  // Practice Area Tabs
-  .practice-tabs-wrapper {
-    margin: 3rem 0;
-    overflow: hidden;
-  }
 
-  .practice-tabs {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 1rem;
-    max-width: 68rem;
-    margin: 0 auto;
-  }
-
-  .practice-tab-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 1.5rem 1rem;
-    background: white;
-    border: 1px solid #e2e8f0;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-align: center;
-
-    &:hover {
-      border-color: $color-primary;
-      background: #fafbfc;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    }
-
-    &--active {
-      background: $color-primary;
-      border-color: $color-primary;
-      color: white;
-      box-shadow: 0 4px 16px rgba(90, 154, 127, 0.25);
-
-      .practice-tab-icon {
-        color: white;
-      }
-
-      .practice-tab-label {
-        color: white;
-      }
-    }
-  }
-
-  .practice-tab-icon {
-    width: 2rem;
-    height: 2rem;
-    color: $color-primary;
-    transition: color 0.3s ease;
-
-    svg {
-      width: 100%;
-      height: 100%;
-    }
-  }
-
-  .practice-tab-label {
-    font-size: 0.9375rem;
-    font-weight: 500;
-    color: #334155;
-    transition: color 0.3s ease;
-  }
-
-  // Practice Content Area
-  .practice-content-area {
-    max-width: 56rem;
-    margin: 3rem auto 0;
-  }
-
+  // Practice Detail
   .practice-detail {
-    animation: fadeIn 0.4s ease;
-  }
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    margin-bottom: 3rem;
   }
 
   .practice-detail-header {
     margin-bottom: 2.5rem;
     padding-bottom: 1.5rem;
-    border-bottom: 2px solid $color-primary;
+    border-bottom: 0.0625rem solid #e2e8f0;
+  }
+
+  .practice-category {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: $color-primary;
+    margin-bottom: 0.75rem;
   }
 
   .practice-detail-title {
     font-size: 2rem;
     font-weight: 500;
-    color: $color-primary;
+    color: #1e293b;
     margin: 0 0 0.5rem 0;
     line-height: 1.3;
+    letter-spacing: -0.01em;
   }
 
   .practice-detail-subtitle {
-    font-size: 1.125rem;
-    font-weight: 300;
-    color: #94a3b8;
+    font-size: 1rem;
+    font-weight: 400;
+    color: #64748b;
     font-style: italic;
     margin: 0;
+  }
+
+  // CTA Section
+  .cta-section {
+    padding: 5rem 0;
+    text-align: center;
+    border-top: 0.0625rem solid #e2e8f0;
+    margin-top: 4rem;
+
+    h3 {
+      font-size: 1.75rem;
+      font-weight: 500;
+      color: #1e293b;
+      margin: 0 0 1rem 0;
+      letter-spacing: -0.01em;
+    }
+
+    p {
+      font-size: 0.9375rem;
+      color: #64748b;
+      margin: 0 0 2rem 0;
+    }
+  }
+
+  .cta-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.875rem 2rem;
+    background: $color-primary;
+    color: white;
+    text-decoration: none;
+    border-radius: 0.375rem;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: darken($color-primary, 8%);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(90, 154, 127, 0.3);
+    }
   }
 
   // Rich Content Styles - WYSIWYG Editor Output
@@ -1041,52 +944,6 @@
     }
   }
 
-  // Empty State
-  .empty-state {
-    text-align: center;
-    padding: 5rem 0;
-
-    p {
-      font-size: 0.9375rem;
-      color: #94a3b8;
-      font-weight: 300;
-    }
-  }
-
-  // CTA Minimal
-  .cta-minimal {
-    margin-top: 6.25rem;
-    padding-top: 3.75rem;
-    border-top: 0.0625rem solid #e2e8f0;
-    text-align: center;
-
-    p {
-      font-size: 1rem;
-      color: #64748b;
-      font-weight: 300;
-      margin-bottom: 1.25rem;
-    }
-  }
-
-  .cta-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: $color-primary;
-    text-decoration: none;
-    padding: 0.75rem 1.5rem;
-    border: 0.0625rem solid #e2e8f0;
-    border-radius: 0.25rem;
-    transition: all 0.3s ease;
-
-    &:hover {
-      border-color: $color-primary;
-      background: rgba(90, 154, 127, 0.03);
-    }
-  }
-
   // Responsive
   @media (max-width: 1024px) {
     .vertical-nav {
@@ -1094,59 +951,60 @@
     }
 
     .page-content {
-      margin-left: 0;
-      padding: 5rem 2.5rem;
+      padding: 1.5rem 2.5rem 3rem;
+    }
+
+    .stats-row {
+      grid-template-columns: repeat(2, 1fr);
     }
   }
 
   @media (max-width: 768px) {
+    .hero-banner {
+      min-height: 70vh;
+    }
+
+    .hero-banner__content {
+      padding: 0 1.5rem;
+    }
+
+    .horizontal-nav {
+      gap: 1.5rem;
+      max-width: 95%;
+    }
+
+    .horizontal-nav__item {
+      font-size: 0.8125rem;
+    }
+
     .page-content {
-      padding: 3.75rem 1.5rem;
+      padding: 1.5rem 1.5rem 3rem;
     }
 
     .section-title {
       font-size: 1.5rem;
     }
 
-    .section-title-alt {
-      font-size: 2rem;
+    .practice-detail-title {
+      font-size: 1.5rem;
     }
 
-    .stats-minimal {
+    .stats-row {
       grid-template-columns: 1fr;
-      gap: 1.5rem;
+      gap: 2rem;
       padding: 2.5rem 0;
     }
 
-    .content-section {
-      min-height: auto;
-      padding: 3.75rem 0;
+    .stat-number {
+      font-size: 2.5rem;
     }
 
-    .category-tabs {
-      gap: 0.5rem;
-    }
+    .cta-section {
+      padding: 3rem 0;
 
-    .category-tab {
-      padding: 0.5rem 1rem;
-      font-size: 0.8125rem;
-    }
-
-    .practice-tab {
-      min-width: 120px;
-      padding: 0.75rem 1rem;
-    }
-
-    .practice-tab-name {
-      font-size: 0.875rem;
-    }
-
-    .practice-tab-name-en {
-      font-size: 0.625rem;
-    }
-
-    .practice-content {
-      padding: 1.5rem;
+      h3 {
+        font-size: 1.5rem;
+      }
     }
 
     .rich-content {
@@ -1160,6 +1018,10 @@
 
       :global(p) {
         font-size: 0.9375rem;
+      }
+
+      :global(img) {
+        margin: 1.5rem auto;
       }
     }
   }

@@ -97,49 +97,51 @@ function handleNavMouseLeave() {
 					{#if item.megaMenu && activeDropdown === item.id}
 						<div class="mega-menu">
 							<div class="mega-menu-inner">
-								<div class="mega-menu-columns">
-									{#each item.megaMenu.columns as column}
-										<div class="mega-menu-column">
-											{#if column.title_zh || column.title_en}
+								<!-- Horizontal Grid Layout -->
+								<div class="mega-menu-grid">
+									{#each item.megaMenu.columns as column, columnIndex}
+										{#if column.title_zh || column.title_en}
+											<div class="mega-menu-section">
 												<h3 class="mega-menu-title">
 													{currentLang === 'zh' ? column.title_zh : column.title_en}
 												</h3>
-											{/if}
-											<ul class="mega-menu-list">
-												{#each column.items as subItem}
-													<li>
+												<div class="mega-menu-links">
+													{#each column.items as subItem}
 														<a
 															href={subItem.path}
 															class="mega-menu-link"
 															class:active={isActive(subItem.path)}
 														>
-															<span class="link-icon">→</span>
-															<span class="link-text">
-																{currentLang === 'zh' ? subItem.label_zh : subItem.label_en}
-															</span>
+															{currentLang === 'zh' ? subItem.label_zh : subItem.label_en}
 														</a>
-													</li>
-												{/each}
-											</ul>
-										</div>
+													{/each}
+
+													<!-- 在最后一列底部添加"查看全部"链接 -->
+													{#if item.id === 'practices' && columnIndex === item.megaMenu.columns.length - 1}
+														<a href="/practices" class="mega-menu-link mega-menu-view-all">
+															查看全部业务领域 →
+														</a>
+													{/if}
+												</div>
+											</div>
+										{:else}
+											<!-- 没有标题的列，直接显示链接 -->
+											<div class="mega-menu-section mega-menu-section--notitle">
+												<div class="mega-menu-links">
+													{#each column.items as subItem}
+														<a
+															href={subItem.path}
+															class="mega-menu-link"
+															class:active={isActive(subItem.path)}
+														>
+															{currentLang === 'zh' ? subItem.label_zh : subItem.label_en}
+														</a>
+													{/each}
+												</div>
+											</div>
+										{/if}
 									{/each}
 								</div>
-
-								<!-- Featured Section (可选) -->
-								{#if item.id === 'practices'}
-									<div class="mega-menu-featured">
-										<div class="featured-card">
-											<div class="featured-icon">
-												<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-													<path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-												</svg>
-											</div>
-											<h4>专业法律服务</h4>
-											<p>为客户提供全方位、高质量的法律解决方案</p>
-											<a href="/practices" class="featured-link">查看全部领域 →</a>
-										</div>
-									</div>
-								{/if}
 							</div>
 						</div>
 					{/if}
@@ -320,22 +322,17 @@ function handleNavMouseLeave() {
 }
 
 // ========================================
-// Mega Menu
+// Mega Menu - Horizontal Layout
 // ========================================
 .mega-menu {
 	position: absolute;
 	top: 100%;
 	left: 50%;
 	transform: translateX(-50%);
-	padding-top: 16px;
-	animation: fadeInDown 0.3s ease;
+	padding-top: 8px;
+	animation: fadeInDown 0.2s ease;
 	pointer-events: auto;
-	min-width: 580px;
-
-	// 针对"业务领域"使用更宽的菜单
-	.nav-item#practices & {
-		min-width: 720px;
-	}
+	width: auto;
 
 	// 移动端隐藏
 	@media (max-width: 1024px) {
@@ -344,155 +341,65 @@ function handleNavMouseLeave() {
 }
 
 .mega-menu-inner {
-	background: rgba(255, 255, 255, 0.88);
-	backdrop-filter: blur(24px) saturate(180%);
-	-webkit-backdrop-filter: blur(24px) saturate(180%);
-	border-radius: 10px;
-	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
-	border: 1px solid rgba(255, 255, 255, 0.6);
-	padding: 20px;
-	display: grid;
-	grid-template-columns: 1fr auto;
-	gap: 24px;
+	background: #ffffff;
+	border-radius: 0;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	border: none;
+	padding: 28px 36px;
+	width: max-content;
 }
 
-.mega-menu-columns {
+.mega-menu-grid {
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-	gap: 20px;
+	grid-template-columns: repeat(3, minmax(200px, auto));
+	gap: 48px;
+	align-items: start;
 }
 
-.mega-menu-column {
-	// 样式
+.mega-menu-section {
+	display: flex;
+	flex-direction: column;
+	gap: 0;
 }
 
 .mega-menu-title {
 	font-size: 11px;
-	font-weight: 600;
-	color: $color-text-primary;
+	font-weight: 700;
+	color: #1a1a1a;
 	text-transform: uppercase;
 	letter-spacing: 0.06em;
-	margin-bottom: 12px;
-	padding-bottom: 8px;
-	border-bottom: 1.5px solid rgba($color-primary, 0.12);
+	margin: 0 0 12px 0;
+	padding: 0;
 }
 
-.mega-menu-list {
-	list-style: none;
-	padding: 0;
-	margin: 0;
-
-	li {
-		margin-bottom: 2px;
-	}
+.mega-menu-links {
+	display: flex;
+	flex-direction: column;
+	gap: 0;
 }
 
 .mega-menu-link {
-	display: flex;
-	align-items: center;
-	gap: 6px;
-	padding: 7px 10px;
+	display: block;
+	padding: 6px 0;
 	font-size: 13px;
-	color: $color-text-secondary;
+	font-weight: 400;
+	color: #4a4a4a;
 	text-decoration: none;
-	border-radius: 5px;
-	transition: all 0.2s;
-
-	.link-icon {
-		color: $color-primary;
-		opacity: 0;
-		transform: translateX(-4px);
-		transition: all 0.2s;
-		font-size: 12px;
-	}
-
-	.link-text {
-		transition: transform 0.2s;
-	}
+	transition: color 0.2s;
+	line-height: 1.4;
 
 	&:hover {
-		background: rgba($color-primary, 0.06);
 		color: $color-primary;
-
-		.link-icon {
-			opacity: 1;
-			transform: translateX(0);
-		}
-
-		.link-text {
-			transform: translateX(4px);
-		}
 	}
 
 	&.active {
-		background: rgba($color-primary, 0.1);
+		color: $color-primary;
+	}
+
+	&.mega-menu-view-all {
+		margin-top: 10px;
 		color: $color-primary;
 		font-weight: 500;
-
-		.link-icon {
-			opacity: 1;
-			transform: translateX(0);
-		}
-	}
-}
-
-// Featured Section
-.mega-menu-featured {
-	min-width: 200px;
-	max-width: 220px;
-}
-
-.featured-card {
-	background: linear-gradient(135deg, rgba($color-primary, 0.04) 0%, rgba($color-accent, 0.04) 100%);
-	border: 1px solid rgba($color-primary, 0.12);
-	border-radius: 6px;
-	padding: 18px;
-	height: 100%;
-
-	.featured-icon {
-		width: 40px;
-		height: 40px;
-		background: linear-gradient(135deg, $color-primary 0%, $color-accent 100%);
-		border-radius: 6px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		color: white;
-		margin-bottom: 12px;
-
-		svg {
-			width: 20px;
-			height: 20px;
-		}
-	}
-
-	h4 {
-		font-size: 14px;
-		font-weight: 600;
-		color: $color-text-primary;
-		margin: 0 0 6px 0;
-	}
-
-	p {
-		font-size: 12px;
-		color: $color-text-secondary;
-		line-height: 1.5;
-		margin: 0 0 12px 0;
-	}
-
-	.featured-link {
-		display: inline-flex;
-		align-items: center;
-		font-size: 12px;
-		font-weight: 500;
-		color: $color-primary;
-		text-decoration: none;
-		transition: gap 0.2s;
-		gap: 4px;
-
-		&:hover {
-			gap: 7px;
-		}
 	}
 }
 
