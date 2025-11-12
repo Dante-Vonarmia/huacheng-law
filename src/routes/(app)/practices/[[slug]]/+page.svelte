@@ -3,10 +3,10 @@
   import { page } from '$app/stores';
 
   let scrollY = $state(0);
-  let activeSection = $state(0); // 0 = 简介, 1-13 = 业务领域
+  let activeSection = $state(0); // 0 = 简介, 1 = 核心业务, 2 = 行业专长, 3 = 专业服务
   let showVerticalNav = $state(false);
 
-  // 定义业务领域数据（保留原有数据）
+  // 定义业务领域数据（按分类组织）
   const practices = [
     {
       id: 'ip',
@@ -220,20 +220,39 @@
     }
   ];
 
-  // 创建sections：简介 + 13个业务领域
+  // 按分类分组
+  const categories = [
+    {
+      id: 'core',
+      name: '核心业务',
+      items: practices.filter(p => p.category === '核心业务')
+    },
+    {
+      id: 'industry',
+      name: '行业专长',
+      items: practices.filter(p => p.category === '行业专长')
+    },
+    {
+      id: 'services',
+      name: '专业服务',
+      items: practices.filter(p => p.category === '专业服务')
+    }
+  ];
+
+  // 创建sections：简介 + 3个分类
   const sections = [
     { id: 'intro', label: '简介' },
-    ...practices.map(p => ({
-      id: p.id,
-      label: p.name_zh
-    }))
+    { id: 'core', label: '核心业务' },
+    { id: 'industry', label: '行业专长' },
+    { id: 'services', label: '专业服务' }
   ];
 
   // 滚动到指定section
   function scrollToSection(index: number) {
+    activeSection = index; // 立即更新状态
     const section = document.getElementById(sections[index].id);
     if (section) {
-      const offset = 0;
+      const offset = 80; // Header高度
       const elementPosition = section.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.scrollY - offset;
 
@@ -251,20 +270,28 @@
       // 显示垂直导航
       showVerticalNav = scrollY > window.innerHeight * 0.8;
 
-      // 更新active section
+      // 更新active section - 使用更准确的检测
       const sectionElements = sections.map(s => document.getElementById(s.id));
-      const scrollPosition = window.scrollY + window.innerHeight / 3;
+      // 使用视口中心点作为参考
+      const scrollPosition = window.scrollY + window.innerHeight / 2;
 
       for (let i = sectionElements.length - 1; i >= 0; i--) {
         const element = sectionElements[i];
-        if (element && element.offsetTop <= scrollPosition) {
-          activeSection = i;
-          break;
+        if (element) {
+          const elementTop = element.offsetTop;
+          const elementBottom = elementTop + element.offsetHeight;
+
+          // 检查section是否在视口中心附近
+          if (scrollPosition >= elementTop - 100) {
+            activeSection = i;
+            break;
+          }
         }
       }
     };
 
     window.addEventListener('scroll', handleScroll);
+    handleScroll(); // 初始调用
     return () => window.removeEventListener('scroll', handleScroll);
   });
 </script>
@@ -317,76 +344,61 @@
 <!-- Main Content -->
 <div class="page-content">
 
-  <!-- Section INTRO: 简介 -->
+  <!-- Section 1: 简介 -->
   <section class="content-section" id="intro">
-    <div class="section-number">INTRO</div>
-    <div class="section-explore">EXPLORE</div>
-
-    <h2 class="section-title">
-      "专业沉淀，全方位法律服务解决方案"
-    </h2>
-
-    <p class="section-intro">
-      华诚律师事务所在知识产权、公司法、金融法、诉讼仲裁等多个专业领域拥有深厚的专业积累。我们的律师团队始终秉承专业、高效、务实的服务理念，为客户提供全方位的法律解决方案。
-    </p>
-
-    <div class="stats-row">
-      <div class="stat-item">
-        <div class="stat-number">13</div>
-        <div class="stat-label">业务领域</div>
+    <div class="container">
+      <h2 class="section-heading">业务领域简介</h2>
+      <div class="intro-content">
+        <p>华诚律师事务所在知识产权、公司法、金融法、诉讼仲裁等多个专业领域拥有深厚的专业积累。我们的律师团队始终秉承专业、高效、务实的服务理念，为客户提供全方位的法律解决方案。</p>
+        <p>自成立以来，华诚已为数千家国内外企业提供专业法律服务，业务涵盖13个核心领域，累计处理案件超过10000件，客户满意度持续保持在95%以上。</p>
       </div>
-      <div class="stat-item">
-        <div class="stat-number">100+</div>
-        <div class="stat-label">专业律师</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-number">1000+</div>
-        <div class="stat-label">成功案例</div>
-      </div>
-    </div>
-
-    <div class="narrative-text">
-      <p>自成立以来，华诚已为数千家国内外企业提供专业法律服务，业务涵盖13个核心领域，累计处理案件超过10000件，客户满意度持续保持在95%以上。</p>
-      <p>我们深知每个客户的需求都是独特的，因此我们致力于提供量身定制的法律解决方案，确保客户在复杂的法律环境中获得最大的商业价值和法律保护。</p>
     </div>
   </section>
 
-  <!-- 13个业务领域 -->
-  {#each practices as practice, index}
-    <section class="content-section" id={practice.id}>
-      <div class="section-number">{String(index + 1).padStart(2, '0')}</div>
-      <div class="section-explore">EXPLORE</div>
-
-      <article class="practice-detail">
-        <div class="practice-detail-header">
-          <div class="practice-category">{practice.category}</div>
-          <h2 class="practice-detail-title">{practice.name_zh}</h2>
-          <p class="practice-detail-subtitle">{practice.name_en}</p>
-        </div>
-
-        {#if practice.richContent}
-          <div class="rich-content">
-            {@html practice.richContent}
+  <!-- Section 2: 核心业务 -->
+  <section class="content-section" id="core">
+    <div class="container">
+      <h2 class="section-heading">核心业务</h2>
+      <div class="practice-list">
+        {#each categories[0].items as practice}
+          <div class="practice-item">
+            <h3 class="practice-name">{practice.name_zh}</h3>
+            <p class="practice-desc">{practice.description_zh}</p>
           </div>
-        {:else}
-          <div class="rich-content">
-            <p>{practice.description_zh}</p>
+        {/each}
+      </div>
+    </div>
+  </section>
 
-            <h4>核心服务</h4>
-            <ul>
-              {#each practice.services as service}
-                <li>{service}</li>
-              {/each}
-            </ul>
-
-            {#if practice.cases}
-              <p><strong>案例成果：</strong>{practice.cases}</p>
-            {/if}
+  <!-- Section 3: 行业专长 -->
+  <section class="content-section" id="industry">
+    <div class="container">
+      <h2 class="section-heading">行业专长</h2>
+      <div class="practice-list">
+        {#each categories[1].items as practice}
+          <div class="practice-item">
+            <h3 class="practice-name">{practice.name_zh}</h3>
+            <p class="practice-desc">{practice.description_zh}</p>
           </div>
-        {/if}
-      </article>
-    </section>
-  {/each}
+        {/each}
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 4: 专业服务 -->
+  <section class="content-section" id="services">
+    <div class="container">
+      <h2 class="section-heading">专业服务</h2>
+      <div class="practice-list">
+        {#each categories[2].items as practice}
+          <div class="practice-item">
+            <h3 class="practice-name">{practice.name_zh}</h3>
+            <p class="practice-desc">{practice.description_zh}</p>
+          </div>
+        {/each}
+      </div>
+    </div>
+  </section>
 
   <!-- CTA Section -->
   <section class="cta-section">
@@ -521,7 +533,6 @@
     display: flex;
     flex-direction: column;
     gap: 2rem;
-    align-items: flex-start;
   }
 
   .vertical-nav__item {
@@ -570,87 +581,45 @@
   .page-content {
     max-width: 75rem;
     margin: 0 auto;
-    padding: 1.5rem 3rem 3rem;
+    padding: 0;
   }
 
   // Content Sections
   .content-section {
-    padding: 1.5rem 0;
+    min-height: calc(100vh - 80px);
+    padding: 6rem 3rem;
     position: relative;
+    border-bottom: 1px solid #e2e8f0;
+
+    &:last-child {
+      border-bottom: none;
+    }
   }
 
-  .section-number {
-    font-size: 0.6875rem;
-    font-weight: 600;
-    letter-spacing: 0.15em;
-    color: #cbd5e1;
-    margin-bottom: 0.5rem;
+  .container {
+    max-width: 60rem;
+    margin: 0 auto;
   }
 
-  .section-explore {
-    font-size: 0.6875rem;
-    font-weight: 400;
-    letter-spacing: 0.2em;
-    color: #cbd5e1;
-    margin-bottom: 3.75rem;
-    text-transform: uppercase;
-  }
-
-  .section-title {
-    font-size: 2rem;
-    font-weight: 400;
-    line-height: 1.6;
+  .section-heading {
+    font-size: 2.25rem;
+    font-weight: 300;
     color: #1e293b;
     margin-bottom: 3rem;
-    letter-spacing: -0.01em;
-  }
-
-  .section-intro {
-    font-size: 0.875rem;
-    font-weight: 300;
-    line-height: 1.8;
-    color: #64748b;
-    margin-bottom: 3.75rem;
-  }
-
-  // Stats
-  .stats-row {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2.5rem;
-    margin-bottom: 5rem;
-    padding: 3.75rem 0;
-    border-top: 0.0625rem solid #e2e8f0;
-    border-bottom: 0.0625rem solid #e2e8f0;
-  }
-
-  .stat-item {
-    text-align: center;
-  }
-
-  .stat-number {
-    font-size: 3rem;
-    font-weight: 200;
-    color: #1e293b;
-    margin-bottom: 0.5rem;
     letter-spacing: -0.02em;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid $color-primary;
   }
 
-  .stat-label {
-    font-size: 0.75rem;
-    font-weight: 400;
-    color: #94a3b8;
-    letter-spacing: 0.05em;
-  }
+  // 简介内容
+  .intro-content {
+    max-width: 50rem;
 
-  // Narrative Text
-  .narrative-text {
     p {
-      font-size: 0.9375rem;
-      font-weight: 300;
+      font-size: 1.0625rem;
       line-height: 1.9;
       color: #475569;
-      margin-bottom: 1.75rem;
+      margin-bottom: 1.5rem;
 
       &:last-child {
         margin-bottom: 0;
@@ -658,50 +627,55 @@
     }
   }
 
-
-  // Practice Detail
-  .practice-detail {
-    margin-bottom: 3rem;
+  // 业务列表（菜单式）
+  .practice-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
   }
 
-  .practice-detail-header {
-    margin-bottom: 2.5rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 0.0625rem solid #e2e8f0;
+  .practice-item {
+    padding: 2rem 0;
+    border-bottom: 1px solid #f1f5f9;
+    transition: all 0.2s;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      padding-left: 1rem;
+      background: #fafbfc;
+      margin-left: -1rem;
+      margin-right: -1rem;
+      padding-right: 1rem;
+
+      .practice-name {
+        color: $color-primary;
+      }
+    }
   }
 
-  .practice-category {
-    font-size: 0.6875rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: $color-primary;
-    margin-bottom: 0.75rem;
-  }
-
-  .practice-detail-title {
-    font-size: 2rem;
+  .practice-name {
+    font-size: 1.25rem;
     font-weight: 500;
     color: #1e293b;
-    margin: 0 0 0.5rem 0;
-    line-height: 1.3;
-    letter-spacing: -0.01em;
+    margin: 0 0 0.75rem 0;
+    transition: color 0.2s;
   }
 
-  .practice-detail-subtitle {
-    font-size: 1rem;
-    font-weight: 400;
+  .practice-desc {
+    font-size: 0.9375rem;
+    line-height: 1.7;
     color: #64748b;
-    font-style: italic;
     margin: 0;
   }
 
+
   // CTA Section
   .cta-section {
-    padding: 5rem 0;
+    padding: 5rem 3rem;
     text-align: center;
-    border-top: 0.0625rem solid #e2e8f0;
-    margin-top: 4rem;
 
     h3 {
       font-size: 1.75rem;
@@ -738,224 +712,22 @@
     }
   }
 
-  // Rich Content Styles - WYSIWYG Editor Output
-  .rich-content {
-    line-height: 1.8;
-    color: #475569;
-
-    // Headings
-    :global(h3) {
-      font-size: 1.75rem;
-      font-weight: 500;
-      color: $color-primary;
-      margin: 0 0 1.5rem 0;
-      line-height: 1.3;
-    }
-
-    :global(h4) {
-      font-size: 1.25rem;
-      font-weight: 500;
-      color: #334155;
-      margin: 2.5rem 0 1rem 0;
-      line-height: 1.4;
-    }
-
-    :global(h5) {
-      font-size: 1.125rem;
-      font-weight: 500;
-      color: #475569;
-      margin: 2rem 0 0.75rem 0;
-    }
-
-    // Paragraphs
-    :global(p) {
-      font-size: 1rem;
-      line-height: 1.8;
-      color: #475569;
-      margin-bottom: 1.5rem;
-    }
-
-    // Lists
-    :global(ul),
-    :global(ol) {
-      padding-left: 2rem;
-      margin: 1.5rem 0;
-    }
-
-    :global(ul) {
-      list-style: none;
-
-      :global(li) {
-        position: relative;
-        padding-left: 1.5rem;
-
-        &::before {
-          content: '•';
-          position: absolute;
-          left: 0;
-          color: $color-primary;
-          font-weight: bold;
-          font-size: 1.25rem;
-        }
-      }
-    }
-
-    :global(ol) {
-      list-style: decimal;
-
-      :global(li) {
-        padding-left: 0.5rem;
-      }
-    }
-
-    :global(li) {
-      font-size: 0.9375rem;
-      line-height: 1.7;
-      color: #475569;
-      margin-bottom: 0.75rem;
-    }
-
-    :global(strong),
-    :global(b) {
-      font-weight: 600;
-      color: #334155;
-    }
-
-    :global(em),
-    :global(i) {
-      font-style: italic;
-    }
-
-    // Images - Default (center aligned)
-    :global(img) {
-      max-width: 100%;
-      height: auto;
-      border-radius: 0.5rem;
-      margin: 2rem auto;
-      display: block;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    }
-
-    // Image alignment classes (from WYSIWYG editor)
-    :global(img.align-left) {
-      float: left;
-      margin: 0.5rem 2rem 1rem 0;
-      max-width: 50%;
-    }
-
-    :global(img.align-right) {
-      float: right;
-      margin: 0.5rem 0 1rem 2rem;
-      max-width: 50%;
-    }
-
-    :global(img.align-center) {
-      display: block;
-      margin: 2rem auto;
-      max-width: 100%;
-    }
-
-    // Blockquote
-    :global(blockquote) {
-      border-left: 4px solid $color-secondary;
-      padding-left: 1.5rem;
-      margin: 2rem 0;
-      font-style: italic;
-      color: #64748b;
-      background: #f8fafc;
-      padding: 1.5rem;
-      border-radius: 0 0.5rem 0.5rem 0;
-    }
-
-    // Tables
-    :global(table) {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 2rem 0;
-      font-size: 0.9375rem;
-    }
-
-    :global(th),
-    :global(td) {
-      padding: 0.75rem 1rem;
-      text-align: left;
-      border-bottom: 1px solid #e2e8f0;
-    }
-
-    :global(th) {
-      background: #f8fafc;
-      font-weight: 600;
-      color: #334155;
-    }
-
-    :global(tr:hover) {
-      background: #fafbfc;
-    }
-
-    // Links
-    :global(a) {
-      color: $color-primary;
-      text-decoration: none;
-      border-bottom: 1px solid transparent;
-      transition: border-color 0.2s;
-
-      &:hover {
-        border-bottom-color: $color-primary;
-      }
-    }
-
-    // Code
-    :global(code) {
-      background: #f1f5f9;
-      padding: 0.25rem 0.5rem;
-      border-radius: 0.25rem;
-      font-family: 'Monaco', 'Courier New', monospace;
-      font-size: 0.875rem;
-      color: #334155;
-    }
-
-    :global(pre) {
-      background: #1e293b;
-      color: #e2e8f0;
-      padding: 1.5rem;
-      border-radius: 0.5rem;
-      overflow-x: auto;
-      margin: 2rem 0;
-
-      :global(code) {
-        background: none;
-        padding: 0;
-        color: inherit;
-      }
-    }
-
-    // Horizontal Rule
-    :global(hr) {
-      border: none;
-      border-top: 1px solid #e2e8f0;
-      margin: 3rem 0;
-    }
-
-    // Clear floats after images
-    &::after {
-      content: '';
-      display: table;
-      clear: both;
-    }
-  }
-
   // Responsive
   @media (max-width: 1024px) {
     .vertical-nav {
       display: none;
     }
 
-    .page-content {
-      padding: 1.5rem 2.5rem 3rem;
+    .content-section {
+      padding: 4rem 2rem;
     }
 
-    .stats-row {
-      grid-template-columns: repeat(2, 1fr);
+    .section-heading {
+      font-size: 1.875rem;
+    }
+
+    .practice-name {
+      font-size: 1.125rem;
     }
   }
 
@@ -969,59 +741,49 @@
     }
 
     .horizontal-nav {
-      gap: 1.5rem;
+      gap: 1rem;
       max-width: 95%;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      justify-content: flex-start;
+      padding: 0 1rem;
     }
 
     .horizontal-nav__item {
       font-size: 0.8125rem;
     }
 
-    .page-content {
-      padding: 1.5rem 1.5rem 3rem;
+    .content-section {
+      min-height: auto;
+      padding: 3rem 1.5rem;
     }
 
-    .section-title {
-      font-size: 1.5rem;
+    .section-heading {
+      font-size: 1.625rem;
+      margin-bottom: 2rem;
     }
 
-    .practice-detail-title {
-      font-size: 1.5rem;
+    .intro-content p {
+      font-size: 1rem;
     }
 
-    .stats-row {
-      grid-template-columns: 1fr;
-      gap: 2rem;
-      padding: 2.5rem 0;
+    .practice-item {
+      padding: 1.5rem 0;
     }
 
-    .stat-number {
-      font-size: 2.5rem;
+    .practice-name {
+      font-size: 1.0625rem;
+    }
+
+    .practice-desc {
+      font-size: 0.875rem;
     }
 
     .cta-section {
-      padding: 3rem 0;
+      padding: 3rem 1.5rem;
 
       h3 {
         font-size: 1.5rem;
-      }
-    }
-
-    .rich-content {
-      :global(h3) {
-        font-size: 1.5rem;
-      }
-
-      :global(h4) {
-        font-size: 1.125rem;
-      }
-
-      :global(p) {
-        font-size: 0.9375rem;
-      }
-
-      :global(img) {
-        margin: 1.5rem auto;
       }
     }
   }

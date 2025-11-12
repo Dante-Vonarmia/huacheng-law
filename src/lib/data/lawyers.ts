@@ -317,6 +317,303 @@ export const lawyersData: Lawyer[] = [
       '《数字经济时代的竞争法》作者'
     ],
     isFeatured: false
+  },
+  {
+    id: '10',
+    name_zh: '孙婷',
+    name_en: 'Sun Ting',
+    title_zh: '合伙人',
+    title_en: 'Partner',
+    photo: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=600&h=700&fit=crop&q=80',
+    office: '上海',
+    practice_areas: ['知识产权法', '科技法'],
+    languages: ['中文', '英文', '法文'],
+    education: ['上海交通大学法学学士', '巴黎第二大学知识产权法硕士'],
+    experience: '11年执业经验',
+    email: 'sun.ting@huachenglaw.com',
+    phone: '+86 21 5292 1155',
+    bio_zh: '孙婷律师专注于版权法、软件著作权和数字内容保护。她在互联网、影视、出版等行业的知识产权保护方面具有丰富经验，为多家内容平台提供版权合规和侵权应对服务。',
+    achievements: [
+      'WTR 1000推荐律师（版权领域）',
+      '成功代理某视频平台版权诉讼案，获赔3000万元',
+      '协助某游戏公司完成全球版权布局',
+      '荣获"上海市知识产权保护先进个人"称号'
+    ],
+    publications: [
+      '《数字内容版权保护实务》作者',
+      '《软件著作权法律指南》合著'
+    ],
+    isFeatured: false
+  },
+  {
+    id: '11',
+    name_zh: '吴刚',
+    name_en: 'Wu Gang',
+    title_zh: '合伙人',
+    title_en: 'Partner',
+    photo: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=600&h=700&fit=crop&q=80',
+    office: '北京',
+    practice_areas: ['环境法', '能源法'],
+    languages: ['中文', '英文'],
+    education: ['中国人民大学法学学士', '环境法硕士'],
+    experience: '16年执业经验',
+    email: 'wu.gang@huachenglaw.com',
+    phone: '+86 10 8520 1144',
+    bio_zh: '吴刚律师专注于环境保护、能源项目和ESG合规。他为多家大型企业提供环境法律服务，协助企业应对环保监管、完成绿色转型。吴律师在碳交易、新能源项目投资方面具有独特见解。',
+    achievements: [
+      'Chambers Asia推荐律师（环境法领域）',
+      '协助某能源集团完成10GW风电项目投资',
+      '为多家企业建立ESG合规体系',
+      '荣获"全国环境法律服务优秀律师"称号'
+    ],
+    publications: [
+      '《企业环境合规指南》主编',
+      '《碳交易法律实务》合著'
+    ],
+    isFeatured: false
+  },
+  {
+    id: '12',
+    name_zh: '黄丽',
+    name_en: 'Huang Li',
+    title_zh: '合伙人',
+    title_en: 'Partner',
+    photo: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=600&h=700&fit=crop&q=80',
+    office: '深圳',
+    practice_areas: ['公司法', '创业法'],
+    languages: ['中文', '英文'],
+    education: ['厦门大学法学学士', '创业与创新法律硕士'],
+    experience: '10年执业经验',
+    email: 'huang.li@huachenglaw.com',
+    phone: '+86 755 8888 1133',
+    bio_zh: '黄丽律师专注于创业公司法律服务、股权设计和风险投资。她为数百家初创企业提供从设立到融资的全流程法律服务，累计协助企业融资超50亿元。黄律师对互联网、科技创业领域有深刻理解。',
+    achievements: [
+      '深圳市创业导师',
+      '协助某AI独角兽完成C轮融资，融资额10亿元',
+      '为300余家创业企业提供股权架构设计',
+      '荣获"深圳市创新创业法律服务先进个人"称号'
+    ],
+    publications: [
+      '《创业企业法律实务》作者',
+      '《股权激励设计与实施》合著'
+    ],
+    isFeatured: false
+  },
+  {
+    id: '13',
+    name_zh: '郑浩',
+    name_en: 'Zheng Hao',
+    title_zh: '高级律师',
+    title_en: 'Senior Associate',
+    photo: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=600&h=700&fit=crop&q=80',
+    office: '上海',
+    practice_areas: ['诉讼仲裁', '建筑工程'],
+    languages: ['中文', '英文'],
+    education: ['同济大学法学学士', '建设工程法硕士'],
+    experience: '9年执业经验',
+    email: 'zheng.hao@huachenglaw.com',
+    phone: '+86 21 5292 1166',
+    bio_zh: '郑浩律师专注于建设工程纠纷、工程合同审查和施工索赔。他成功代理了多起重大建设工程诉讼案件，涉及金额累计超30亿元。郑律师精通建设工程法律法规，能为客户提供专业的风险防控建议。',
+    achievements: [
+      '成功代理某地铁项目施工纠纷，追回工程款5亿元',
+      '协助某建筑集团完善工程合同管理体系',
+      '为50余个重大工程项目提供法律服务',
+      '荣获"上海市建筑法律服务优秀律师"称号'
+    ],
+    publications: [
+      '《建设工程纠纷处理实务》合著',
+      '《工程索赔法律指南》编委'
+    ],
+    isFeatured: false
+  },
+  {
+    id: '14',
+    name_zh: '林娜',
+    name_en: 'Lin Na',
+    title_zh: '高级律师',
+    title_en: 'Senior Associate',
+    photo: 'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=600&h=700&fit=crop&q=80',
+    office: '北京',
+    practice_areas: ['医疗法', '生物医药'],
+    languages: ['中文', '英文'],
+    education: ['北京大学医学部法学学士', '卫生法学硕士'],
+    experience: '8年执业经验',
+    email: 'lin.na@huachenglaw.com',
+    phone: '+86 10 8520 1155',
+    bio_zh: '林娜律师专注于医疗健康、药品注册和医疗器械监管。她拥有医学和法学双重背景，能够为医药企业提供专业的合规咨询和产品注册服务。林律师在临床试验、医疗纠纷方面经验丰富。',
+    achievements: [
+      '协助某制药企业完成10个新药注册申报',
+      '成功代理多起医疗纠纷案件',
+      '为30余家医药企业建立合规体系',
+      '荣获"全国卫生法律服务优秀律师"称号'
+    ],
+    publications: [
+      '《医疗器械法规实务》作者',
+      '《药品注册法律指南》合著'
+    ],
+    isFeatured: false
+  },
+  {
+    id: '15',
+    name_zh: '许涛',
+    name_en: 'Xu Tao',
+    title_zh: '高级律师',
+    title_en: 'Senior Associate',
+    photo: 'https://images.unsplash.com/photo-1463453091185-61582044d556?w=600&h=700&fit=crop&q=80',
+    office: '深圳',
+    practice_areas: ['数据法', '网络安全'],
+    languages: ['中文', '英文'],
+    education: ['北京邮电大学法学学士', '信息安全法硕士'],
+    experience: '7年执业经验',
+    email: 'xu.tao@huachenglaw.com',
+    phone: '+86 755 8888 1144',
+    bio_zh: '许涛律师专注于数据保护、网络安全和个人信息合规。他为多家互联网企业提供数据合规咨询，协助企业应对《个人信息保护法》《数据安全法》等新法规要求。许律师在跨境数据传输方面具有丰富经验。',
+    achievements: [
+      '协助某互联网公司完成数据合规体系建设',
+      '为50余家企业提供个人信息保护培训',
+      '成功应对多起数据安全监管调查',
+      '荣获"深圳市网络安全法律服务先进个人"称号'
+    ],
+    publications: [
+      '《个人信息保护合规指南》作者',
+      '《数据跨境传输法律实务》合著'
+    ],
+    isFeatured: false
+  },
+  {
+    id: '16',
+    name_zh: '秦丽',
+    name_en: 'Qin Li',
+    title_zh: '高级律师',
+    title_en: 'Senior Associate',
+    photo: 'https://images.unsplash.com/photo-1502685104226-ee32379fefbe?w=600&h=700&fit=crop&q=80',
+    office: '上海',
+    practice_areas: ['家族财富', '信托法'],
+    languages: ['中文', '英文', '德文'],
+    education: ['复旦大学法学学士', '信托法硕士'],
+    experience: '9年执业经验',
+    email: 'qin.li@huachenglaw.com',
+    phone: '+86 21 5292 1177',
+    bio_zh: '秦丽律师专注于家族财富管理、信托设立和财产传承规划。她为高净值客户提供全方位的财富保护和传承方案，涉及资产总额超100亿元。秦律师在跨境家族信托、家族办公室设立方面经验丰富。',
+    achievements: [
+      'WealthBriefing评选为"亚洲财富管理法律顾问"',
+      '协助某家族设立10亿美元家族信托',
+      '为50余个高净值家庭提供财富传承方案',
+      '荣获"上海市财富管理法律服务优秀律师"称号'
+    ],
+    publications: [
+      '《家族信托法律实务》主编',
+      '《财富传承与税务筹划》合著'
+    ],
+    isFeatured: false
+  },
+  {
+    id: '17',
+    name_zh: '冯军',
+    name_en: 'Feng Jun',
+    title_zh: '律师',
+    title_en: 'Associate',
+    photo: 'https://images.unsplash.com/photo-1542909168-82c3e7fdca5c?w=600&h=700&fit=crop&q=80',
+    office: '北京',
+    practice_areas: ['刑事辩护', '合规'],
+    languages: ['中文', '英文'],
+    education: ['中国政法大学刑法学学士', '刑事法硕士'],
+    experience: '6年执业经验',
+    email: 'feng.jun@huachenglaw.com',
+    phone: '+86 10 8520 1166',
+    bio_zh: '冯军律师专注于刑事辩护、企业刑事合规和职务犯罪预防。他成功代理了多起重大经济犯罪案件，为企业高管提供刑事法律风险防范服务。冯律师在反腐败合规、刑事风险管理方面具有深入研究。',
+    achievements: [
+      '成功辩护某企业高管经济犯罪案件，获无罪判决',
+      '为20余家企业建立刑事合规体系',
+      '代理多起职务犯罪辩护案件',
+      '荣获"北京市刑事辩护优秀律师"称号'
+    ],
+    publications: [
+      '《企业刑事合规实务》合著',
+      '《经济犯罪辩护策略》编委'
+    ],
+    isFeatured: false
+  },
+  {
+    id: '18',
+    name_zh: '田芳',
+    name_en: 'Tian Fang',
+    title_zh: '律师',
+    title_en: 'Associate',
+    photo: 'https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?w=600&h=700&fit=crop&q=80',
+    office: '深圳',
+    practice_areas: ['海商法', '国际贸易'],
+    languages: ['中文', '英文', '西班牙文'],
+    education: ['大连海事大学法学学士', '海商法硕士'],
+    experience: '6年执业经验',
+    email: 'tian.fang@huachenglaw.com',
+    phone: '+86 755 8888 1155',
+    bio_zh: '田芳律师专注于海事海商、国际货物运输和海事保险。她为船公司、货代企业提供专业法律服务，成功处理了多起海事纠纷案件。田律师在海上货物损失索赔、船舶碰撞责任方面经验丰富。',
+    achievements: [
+      '成功代理某货物灭失案件，追回损失2000万元',
+      '为30余家航运企业提供法律服务',
+      '处理多起复杂海事保险理赔案件',
+      '荣获"深圳市海商法律服务优秀律师"称号'
+    ],
+    publications: [
+      '《海事纠纷处理实务》合著',
+      '《国际货物运输法律指南》编委'
+    ],
+    isFeatured: false
+  },
+  {
+    id: '19',
+    name_zh: '韩超',
+    name_en: 'Han Chao',
+    title_zh: '律师',
+    title_en: 'Associate',
+    photo: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=600&h=700&fit=crop&q=80',
+    office: '上海',
+    practice_areas: ['体育法', '娱乐法'],
+    languages: ['中文', '英文'],
+    education: ['上海体育学院法学学士', '体育法硕士'],
+    experience: '5年执业经验',
+    email: 'han.chao@huachenglaw.com',
+    phone: '+86 21 5292 1188',
+    bio_zh: '韩超律师专注于体育产业、运动员权益保护和赛事运营法律服务。他为多家体育俱乐部、运动员和赛事组织方提供法律支持，在体育经纪合同、赛事转播权方面具有丰富经验。',
+    achievements: [
+      '协助某足球俱乐部完成球员转会谈判',
+      '为10余名职业运动员提供法律服务',
+      '成功处理多起体育赛事纠纷',
+      '荣获"上海市体育法律服务优秀律师"称号'
+    ],
+    publications: [
+      '《体育产业法律实务》合著',
+      '《运动员权益保护指南》编委'
+    ],
+    isFeatured: false
+  },
+  {
+    id: '20',
+    name_zh: '叶敏',
+    name_en: 'Ye Min',
+    title_zh: '律师',
+    title_en: 'Associate',
+    photo: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=600&h=700&fit=crop&q=80',
+    office: '北京',
+    practice_areas: ['保险法', '风险管理'],
+    languages: ['中文', '英文'],
+    education: ['对外经济贸易大学法学学士', '保险法硕士'],
+    experience: '5年执业经验',
+    email: 'ye.min@huachenglaw.com',
+    phone: '+86 10 8520 1177',
+    bio_zh: '叶敏律师专注于保险法律服务、保险产品设计和理赔争议解决。她为保险公司、保险中介机构提供合规咨询和风险管理服务。叶律师在财产保险、责任保险方面具有扎实的理论基础和实践经验。',
+    achievements: [
+      '协助某保险公司完成产品创新和监管审批',
+      '成功代理30余起保险理赔纠纷案件',
+      '为多家企业提供保险风险管理方案',
+      '荣获"全国保险法律服务优秀律师"称号'
+    ],
+    publications: [
+      '《保险合同纠纷处理实务》合著',
+      '《保险法律合规指南》编委'
+    ],
+    isFeatured: false
   }
 ];
 

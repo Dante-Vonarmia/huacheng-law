@@ -32,6 +32,8 @@ export default defineConfig({
 			scss: {
 				// 注释掉全局注入，改为在组件中按需导入
 				// additionalData: `@use "$ui/styles/variables.scss" as *;`
+				api: 'modern-compiler', // 使用现代 Sass API，避免 legacy-js-api 警告
+				silenceDeprecations: ['legacy-js-api', 'global-builtin'] // 暂时静默已知的弃用警告
 			}
 		}
 	},

@@ -22,7 +22,7 @@
   ];
 
   // Derived filtered publications
-  const filteredPublications = $derived(() => {
+  const filteredPublications = $derived.by(() => {
     let filtered = data.publications;
 
     if (selectedCategory !== '全部') {

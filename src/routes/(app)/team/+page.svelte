@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { PageData } from './$types';
   import { onMount } from 'svelte';
+  import Select from '$ui/components/Select.svelte';
 
   // Props
   let { data }: { data: PageData } = $props();
@@ -24,8 +25,19 @@
   const practiceAreas = data.practiceAreas;
   const offices = data.offices;
 
+  // Convert to options for Select component
+  const practiceAreaOptions = $derived([
+    { value: 'all', label: '所有领域' },
+    ...practiceAreas.map(area => ({ value: area, label: area }))
+  ]);
+
+  const officeOptions = $derived([
+    { value: 'all', label: '所有办公室' },
+    ...offices.map(office => ({ value: office, label: office }))
+  ]);
+
   // Filtering logic
-  const filteredLawyers = $derived(() => {
+  const filteredLawyers = $derived.by(() => {
     let filtered = lawyers;
 
     if (selectedPracticeArea !== 'all') {
@@ -193,19 +205,19 @@
         class="filter-search"
       />
 
-      <select bind:value={selectedPracticeArea} class="filter-select">
-        <option value="all">所有领域</option>
-        {#each practiceAreas as area}
-          <option value={area}>{area}</option>
-        {/each}
-      </select>
+      <Select
+        bind:value={selectedPracticeArea}
+        options={practiceAreaOptions}
+        placeholder="所有领域"
+        className="filter-select-custom"
+      />
 
-      <select bind:value={selectedOffice} class="filter-select">
-        <option value="all">所有办公室</option>
-        {#each offices as office}
-          <option value={office}>{office}</option>
-        {/each}
-      </select>
+      <Select
+        bind:value={selectedOffice}
+        options={officeOptions}
+        placeholder="所有办公室"
+        className="filter-select-custom"
+      />
 
       {#if selectedPracticeArea !== 'all' || selectedOffice !== 'all' || searchQuery}
         <button
@@ -569,43 +581,36 @@
     grid-template-columns: 2fr 1fr 1fr auto;
     gap: 1rem;
     margin-bottom: 1.5rem;
+    align-items: start;
   }
 
   .filter-search {
     padding: 0.75rem 1rem;
     border: 0.0625rem solid #e2e8f0;
-    border-radius: 0.25rem;
+    border-radius: 0.375rem;
     font-size: 0.875rem;
     color: #1e293b;
     font-weight: 300;
     outline: none;
-    transition: border-color 0.2s;
+    transition: all 0.2s;
 
     &::placeholder {
       color: #cbd5e1;
     }
 
-    &:focus {
+    &:hover {
       border-color: #94a3b8;
+      background: #f8fafc;
+    }
+
+    &:focus {
+      border-color: $color-primary;
+      box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
     }
   }
 
-  .filter-select {
-    padding: 0.75rem 1rem;
-    border: 0.0625rem solid #e2e8f0;
-    border-radius: 0.25rem;
-    font-size: 0.875rem;
-    color: #1e293b;
-    font-weight: 300;
-    background: white;
-    outline: none;
-    cursor: pointer;
-    transition: border-color 0.2s;
-
-    &:hover,
-    &:focus {
-      border-color: #94a3b8;
-    }
+  :global(.filter-select-custom) {
+    margin-bottom: 0;
   }
 
   .filter-reset {
