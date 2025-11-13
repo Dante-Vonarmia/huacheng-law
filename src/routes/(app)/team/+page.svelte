@@ -296,85 +296,14 @@
 
 <style lang="scss">
   @use '$ui/styles/variables.scss' as *;
+  @use '$ui/styles/components/index.scss' as *;
 
-  // Hero Banner
+  // Page-specific overrides
   .hero-banner {
-    position: relative;
-    height: 60vh;
-    min-height: 28rem;
-    max-height: 40rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    text-align: center;
-    overflow: hidden;
     margin-bottom: 5rem;
   }
 
-  .hero-banner__bg {
-    position: absolute;
-    inset: -10%;
-    background: linear-gradient(135deg, rgba(14, 27, 58, 0.92) 0%, rgba(14, 27, 58, 0.85) 100%),
-                url('https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=1920&q=85');
-    background-size: cover;
-    background-position: center;
-    will-change: transform;
-  }
-
-  .hero-banner__content {
-    position: relative;
-    z-index: 2;
-    max-width: 50rem;
-    padding: 0 1.5rem;
-  }
-
-  .hero-banner__label {
-    display: block;
-    font-size: 0.75rem;
-    font-weight: 500;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.7);
-    margin-bottom: 1rem;
-  }
-
-  .hero-banner__title {
-    font-size: clamp(2.5rem, 6vw, 4rem);
-    font-weight: 300;
-    letter-spacing: 0.02em;
-    margin: 0 0 1.25rem 0;
-    line-height: 1.2;
-  }
-
-  .hero-banner__subtitle {
-    font-size: clamp(1rem, 2vw, 1.25rem);
-    font-weight: 300;
-    letter-spacing: 0.02em;
-    opacity: 0.9;
-    margin: 0;
-    line-height: 1.6;
-  }
-
-  // Horizontal Navigation (inside hero)
-  .horizontal-nav {
-    position: absolute;
-    bottom: 3rem;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 3rem;
-    z-index: 3;
-  }
-
   .horizontal-nav__item {
-    background: none;
-    border: none;
-    cursor: pointer;
-    transition: all 0.2s;
-    padding: 0.5rem 0;
-    position: relative;
-
     .nav-label {
       font-size: 0.875rem;
       font-weight: 400;
@@ -383,151 +312,11 @@
       transition: color 0.2s;
     }
 
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 1px;
-      background: white;
-      transform: scaleX(0);
-      transition: transform 0.3s ease;
-    }
-
     &:hover, &.active {
       .nav-label {
         color: white;
       }
-
-      &::after {
-        transform: scaleX(1);
-      }
     }
-  }
-
-  // Vertical Navigation
-  .vertical-nav {
-    position: fixed;
-    left: 3.75rem;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 100;
-  }
-
-  .vertical-nav__inner {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-  }
-
-  .vertical-nav__item {
-    writing-mode: horizontal-tb;
-    font-size: 0.6875rem;
-    font-weight: 600;
-    letter-spacing: 0.15em;
-    color: #cbd5e1;
-    background: none;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    padding: 0;
-    position: relative;
-
-    &::before {
-      content: '';
-      position: absolute;
-      left: -1.25rem;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 0;
-      height: 0.0625rem;
-      background: $color-primary;
-      transition: width 0.3s ease;
-    }
-
-    &:hover {
-      color: #94a3b8;
-
-      &::before {
-        width: 0.75rem;
-      }
-    }
-
-    &.active {
-      color: $color-primary;
-
-      &::before {
-        width: 0.75rem;
-      }
-    }
-  }
-
-  // Page Content
-  .page-content {
-    max-width: 75rem;
-    margin: 0 auto;
-    padding: 1.5rem 3rem 3rem;
-  }
-
-  // Content Sections
-  .content-section {
-    padding: 1.5rem 0;
-    position: relative;
-
-    &--last {
-      padding-bottom: 2rem;
-    }
-  }
-
-  .section-number {
-    font-size: 0.6875rem;
-    font-weight: 600;
-    letter-spacing: 0.15em;
-    color: #cbd5e1;
-    margin-bottom: 0.5rem;
-  }
-
-  .section-explore {
-    font-size: 0.6875rem;
-    font-weight: 400;
-    letter-spacing: 0.2em;
-    color: #cbd5e1;
-    margin-bottom: 3.75rem;
-    text-transform: uppercase;
-  }
-
-  .section-title {
-    font-size: 2rem;
-    font-weight: 400;
-    line-height: 1.6;
-    color: #1e293b;
-    margin-bottom: 3rem;
-    letter-spacing: -0.01em;
-  }
-
-  .section-title-alt {
-    font-size: 3rem;
-    font-weight: 300;
-    line-height: 1.2;
-    color: #1e293b;
-    margin-bottom: 1rem;
-    letter-spacing: -0.02em;
-  }
-
-  .section-subtitle {
-    font-size: 1rem;
-    font-weight: 300;
-    color: #94a3b8;
-    margin-bottom: 3.75rem;
-  }
-
-  .section-intro {
-    font-size: 0.875rem;
-    font-weight: 300;
-    line-height: 1.8;
-    color: #64748b;
-    margin-bottom: 3.75rem;
   }
 
   // Stats Minimal

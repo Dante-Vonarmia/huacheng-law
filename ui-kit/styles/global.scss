@@ -523,23 +523,6 @@ select {
   margin: 0 auto;
 }
 
-// ========== 动画类 ==========
-
-.fade-in {
-  @include fade-in;
-}
-
-.slide-up {
-  @include slide-up;
-}
-
-// 延迟动画
-@for $i from 1 through 6 {
-  .animation-delay-#{$i} {
-    animation-delay: #{$i * 100}ms;
-  }
-}
-
 // ========== 交互状态 ==========
 
 .hover-lift {

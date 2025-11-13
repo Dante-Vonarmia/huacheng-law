@@ -398,6 +398,7 @@
 </section>
 
 <style lang="scss">
+  @use 'sass:color';
   @use '$ui/styles/variables.scss' as *;
 
   // Fixed Top Navigation
@@ -988,7 +989,7 @@
     font-size: 1rem;
     font-weight: 500;
     color: white;
-    background: linear-gradient(135deg, $color-primary 0%, darken($color-primary, 5%) 100%);
+    background: linear-gradient(135deg, $color-primary 0%, color.adjust($color-primary, $lightness: -5%) 100%);
     border: none;
     border-radius: 50px;
     text-decoration: none;

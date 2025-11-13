@@ -200,6 +200,7 @@
 </div>
 
 <style lang="scss">
+  @use 'sass:color';
   @use '$ui/styles/variables.scss' as *;
 
   // Hero Banner
@@ -366,7 +367,7 @@
     margin-top: 1.5rem;
 
     &:hover {
-      background: darken($color-primary, 5%);
+      background: color.adjust($color-primary, $lightness: -5%);
       transform: translateY(-0.0625rem);
     }
   }
@@ -458,7 +459,7 @@
       transition: color 0.2s;
 
       &:hover {
-        color: darken($color-primary, 10%);
+        color: color.adjust($color-primary, $lightness: -10%);
       }
     }
   }

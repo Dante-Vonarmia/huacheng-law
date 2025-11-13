@@ -1,0 +1,108 @@
+@use '../variables.scss' as *;
+
+// Horizontal Navigation (inside hero banner)
+.horizontal-nav {
+  position: absolute;
+  bottom: 3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 3rem;
+  z-index: 3;
+}
+
+.horizontal-nav__item {
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: rgba(255, 255, 255, 0.7);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0.5rem 0;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 0.125rem;
+    background: rgba(255, 255, 255, 0.5);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+  }
+
+  &:hover {
+    color: white;
+    &::after {
+      transform: scaleX(1);
+    }
+  }
+
+  &.active {
+    color: white;
+    &::after {
+      transform: scaleX(1);
+      background: white;
+    }
+  }
+}
+
+// Vertical Navigation (fixed sidebar)
+.vertical-nav {
+  position: fixed;
+  left: 3.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+}
+
+.vertical-nav__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.vertical-nav__item {
+  writing-mode: horizontal-tb;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  color: #cbd5e1;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: -1.25rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0.0625rem;
+    background: $color-primary;
+    transition: width 0.3s ease;
+  }
+
+  &:hover {
+    color: #94a3b8;
+    &::before {
+      width: 0.75rem;
+    }
+  }
+
+  &.active {
+    color: $color-primary;
+    &::before {
+      width: 0.75rem;
+    }
+  }
+}

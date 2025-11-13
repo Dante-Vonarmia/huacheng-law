@@ -318,7 +318,7 @@
         class:active={activeSection === index}
         onclick={() => scrollToSection(index)}
       >
-        {section.label}
+        <span class="nav-label">{section.label}</span>
       </button>
     {/each}
   </nav>
@@ -410,177 +410,35 @@
 </div>
 
 <style lang="scss">
+  @use 'sass:color';
   @use '$ui/styles/variables.scss' as *;
+  @use '$ui/styles/components/index.scss' as *;
 
-  // Hero Banner
+  // Page-specific overrides
   .hero-banner {
-    position: relative;
-    min-height: 85vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    text-align: center;
-    overflow: hidden;
-  }
-
-  .hero-banner__bg {
-    position: absolute;
-    inset: -10%;
-    background: linear-gradient(135deg, rgba(14, 27, 58, 0.92) 0%, rgba(14, 27, 58, 0.85) 100%),
-                url('https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1920&q=85');
-    background-size: cover;
-    background-position: center;
-    will-change: transform;
+    margin-bottom: 5rem; // Practices page needs more spacing
   }
 
   .hero-banner__content {
-    position: relative;
-    z-index: 2;
-    max-width: 60rem;
+    max-width: 60rem; // Wider for practices
     padding: 0 2rem;
   }
 
-  .hero-banner__label {
-    display: block;
-    font-size: 0.75rem;
-    font-weight: 500;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.7);
-    margin-bottom: 1rem;
-  }
-
-  .hero-banner__title {
-    font-size: clamp(2.5rem, 6vw, 4rem);
-    font-weight: 300;
-    letter-spacing: 0.02em;
-    margin: 0 0 1.25rem 0;
-    line-height: 1.2;
-  }
-
-  .hero-banner__subtitle {
-    font-size: clamp(1rem, 2vw, 1.25rem);
-    font-weight: 300;
-    letter-spacing: 0.02em;
-    opacity: 0.9;
-    margin: 0;
-    line-height: 1.6;
-  }
-
-  // Horizontal Navigation
   .horizontal-nav {
-    position: absolute;
     bottom: 2rem;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
     flex-wrap: wrap;
     justify-content: center;
     gap: 1.5rem 2rem;
-    z-index: 3;
     max-width: 90%;
   }
 
   .horizontal-nav__item {
     flex-shrink: 0;
-    background: none;
-    border: none;
     font-size: 0.9rem;
-    font-weight: 400;
-    color: rgba(255, 255, 255, 0.5);
-    cursor: pointer;
-    transition: color 0.2s;
-    padding: 0.5rem 0;
-    position: relative;
     white-space: nowrap;
-
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: white;
-      transform: scaleX(0);
-      transition: transform 0.3s ease;
-    }
-
-    &:hover {
-      color: rgba(255, 255, 255, 0.8);
-    }
-
-    &.active {
-      color: white;
-
-      &::after {
-        transform: scaleX(1);
-      }
-    }
   }
 
-  // Vertical Navigation
-  .vertical-nav {
-    position: fixed;
-    left: 3.75rem;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 100;
-  }
-
-  .vertical-nav__inner {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-  }
-
-  .vertical-nav__item {
-    writing-mode: horizontal-tb;
-    font-size: 0.6875rem;
-    font-weight: 600;
-    letter-spacing: 0.15em;
-    color: #cbd5e1;
-    background: none;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    padding: 0;
-    position: relative;
-
-    &::before {
-      content: '';
-      position: absolute;
-      left: -1.25rem;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 0;
-      height: 0.0625rem;
-      background: $color-primary;
-      transition: width 0.3s ease;
-    }
-
-    &:hover {
-      color: #94a3b8;
-
-      &::before {
-        width: 0.75rem;
-      }
-    }
-
-    &.active {
-      color: $color-primary;
-
-      &::before {
-        width: 0.75rem;
-      }
-    }
-  }
-
-  // Page Content
   .page-content {
-    max-width: 75rem;
-    margin: 0 auto;
     padding: 0;
   }
 
@@ -706,7 +564,7 @@
     transition: all 0.3s ease;
 
     &:hover {
-      background: darken($color-primary, 8%);
+      background: color.adjust($color-primary, $lightness: -8%);
       transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(90, 154, 127, 0.3);
     }
