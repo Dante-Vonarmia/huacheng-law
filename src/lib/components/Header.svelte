@@ -232,6 +232,8 @@ function handleNavMouseLeave() {
 	@media (max-width: 1024px) {
 		padding: 0 24px;
 		height: 64px;
+		justify-content: center; // 移动端居中布局
+		position: relative;
 	}
 }
 
@@ -255,6 +257,12 @@ function handleNavMouseLeave() {
 		@media (max-width: 1024px) {
 			height: 36px;
 		}
+	}
+
+	@media (max-width: 1024px) {
+		// 移动端Logo居中，其他元素绝对定位
+		position: static;
+		z-index: 10;
 	}
 }
 
@@ -421,6 +429,14 @@ function handleNavMouseLeave() {
 	display: flex;
 	align-items: center;
 	gap: 16px;
+
+	@media (max-width: 1024px) {
+		// 移动端右侧绝对定位
+		position: absolute;
+		right: 24px;
+		top: 50%;
+		transform: translateY(-50%);
+	}
 }
 
 .lang-btn {
@@ -442,6 +458,12 @@ function handleNavMouseLeave() {
 		background: rgba($color-primary, 0.06);
 		border-color: $color-primary;
 		color: $color-primary;
+	}
+
+	@media (max-width: 1024px) {
+		width: 36px;
+		height: 36px;
+		font-size: 12px;
 	}
 }
 
@@ -490,51 +512,64 @@ function handleNavMouseLeave() {
 }
 
 // ========================================
-// Mobile Menu
+// Mobile Menu - 轻量级下拉弹出层
 // ========================================
 .mobile-menu {
 	position: fixed;
-	top: 64px;
-	right: 0;
-	bottom: 0;
+	top: 72px;
+	right: 16px;
 	width: 320px;
-	max-width: 85vw;
+	max-height: calc(100vh - 88px);
 	background: white;
+	border-radius: 12px;
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
 	z-index: 999;
-	animation: slideInRight 0.3s ease;
+	animation: slideDown 0.25s ease;
 	overflow-y: auto;
 	overflow-x: hidden;
-	box-shadow: -4px 0 16px rgba(0, 0, 0, 0.1);
 	-webkit-overflow-scrolling: touch;
 
+	@media (max-width: 1024px) {
+		// 平板及以下使用紧凑菜单
+		top: 72px;
+		right: 16px;
+		width: 320px;
+	}
+
 	@media (max-width: 768px) {
-		top: 64px;
+		right: 12px;
+		width: calc(100vw - 24px);
+		max-width: 360px;
 	}
 
 	@media (max-width: 480px) {
-		width: 100vw;
-		max-width: 100vw;
+		right: 8px;
+		width: calc(100vw - 16px);
 	}
 }
 
 .mobile-inner {
-	padding: 24px;
-	padding-bottom: 40px; // 额外底部空间，防止内容被遮挡
+	padding: 12px 8px;
 }
 
 .mobile-item {
-	margin-bottom: 8px;
+	margin-bottom: 0;
+
+	&:not(:last-child) {
+		border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+	}
 }
 
 .mobile-link {
 	display: block;
-	padding: 12px 16px;
+	padding: 14px 16px;
 	font-size: 15px;
-	font-weight: 500;
+	font-weight: 400;
 	color: $color-text-primary;
 	text-decoration: none;
-	border-radius: 8px;
-	transition: all 0.2s;
+	transition: all 0.2s ease;
+	border-radius: 6px;
+	margin: 2px 4px;
 
 	&:hover {
 		background: rgba($color-primary, 0.06);
@@ -543,51 +578,53 @@ function handleNavMouseLeave() {
 }
 
 .mobile-children {
-	padding-left: 16px;
-	margin-top: 4px;
+	padding: 4px 8px 8px;
+	background: rgba(0, 0, 0, 0.02);
+	border-radius: 4px;
+	margin: 4px 12px 8px;
 }
 
 .mobile-group-title {
-	padding: 8px 16px;
-	font-size: 11px;
+	padding: 8px 12px 4px;
+	font-size: 10px;
 	font-weight: 600;
 	color: $color-text-tertiary;
 	text-transform: uppercase;
-	letter-spacing: 0.05em;
+	letter-spacing: 0.08em;
 }
 
 .mobile-child-link {
 	display: block;
-	padding: 8px 16px;
-	font-size: 14px;
+	padding: 8px 12px;
+	font-size: 13px;
 	color: $color-text-secondary;
 	text-decoration: none;
-	border-radius: 6px;
-	transition: all 0.2s;
+	transition: all 0.2s ease;
+	border-radius: 4px;
+	margin: 1px 0;
 
 	&:hover {
-		background: rgba($color-primary, 0.04);
+		background: rgba($color-primary, 0.08);
 		color: $color-primary;
 	}
 }
 
 .mobile-overlay {
 	position: fixed;
-	top: 64px;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	background: rgba(0, 0, 0, 0.4);
+	inset: 0;
+	background: transparent; // 透明遮罩，仅用于关闭菜单
 	z-index: 998;
-	animation: fadeIn 0.3s ease;
+	animation: fadeIn 0.2s ease;
 }
 
-@keyframes slideInRight {
+@keyframes slideDown {
 	from {
-		transform: translateX(100%);
+		opacity: 0;
+		transform: translateY(-12px);
 	}
 	to {
-		transform: translateX(0);
+		opacity: 1;
+		transform: translateY(0);
 	}
 }
 

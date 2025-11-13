@@ -9,23 +9,9 @@
 
 // ========== 字体声明 Font Declarations ==========
 
-/* 霞鹜文楷 - Regular */
-@font-face {
-  font-family: 'LXGW WenKai';
-  src: url('/fonts/LXGWWenKai-Regular.ttf') format('truetype');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-/* 霞鹜文楷 - Bold */
-@font-face {
-  font-family: 'LXGW WenKai';
-  src: url('/fonts/LXGWWenKai-Bold.ttf') format('truetype');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
+/* 霞鹜文楷 - 使用 CDN 的子集化字体 (优化的 WOFF2，按需加载) */
+@import url('https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/lxgwwenkai-regular.css');
+@import url('https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/lxgwwenkai-bold.css');
 
 // ========== CSS Reset & Normalize ==========
 

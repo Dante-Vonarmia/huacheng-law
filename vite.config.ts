@@ -4,6 +4,29 @@ import path from 'path';
 
 export default defineConfig({
 	plugins: [sveltekit()],
+	build: {
+		// 生产构建优化
+		minify: 'terser',
+		terserOptions: {
+			compress: {
+				drop_console: true, // 移除console.log
+				drop_debugger: true,
+				pure_funcs: ['console.log', 'console.info']
+			}
+		},
+		rollupOptions: {
+			output: {
+				manualChunks: {
+					// 代码分割优化
+					'vendor-svelte': ['svelte', '@sveltejs/kit'],
+					'vendor-ui': ['$ui/components']
+				}
+			}
+		},
+		cssCodeSplit: true,
+		sourcemap: false, // 生产环境关闭sourcemap
+		chunkSizeWarningLimit: 1000
+	},
 	server: {
 		port: 9000,
 		host: true, // 支持网络访问

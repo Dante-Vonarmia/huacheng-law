@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { PageData } from './$types';
   import { onMount } from 'svelte';
+  import { page } from '$app/stores';
   import Select from '$ui/components/Select.svelte';
 
   // Props
@@ -13,7 +14,18 @@
   // Filter state
   let selectedPracticeArea = $state('all');
   let selectedOffice = $state('all');
+  let selectedTitle = $state('all'); // 添加职位过滤
   let searchQuery = $state('');
+
+  // 从URL查询参数初始化filter
+  $effect(() => {
+    const filterParam = $page.url.searchParams.get('filter');
+    if (filterParam === 'partner') {
+      selectedTitle = 'partner';
+    } else if (filterParam === 'associate') {
+      selectedTitle = 'associate';
+    }
+  });
 
   const sections = [
     { id: 'intro', label: '简介' },
@@ -48,6 +60,17 @@
 
     if (selectedOffice !== 'all') {
       filtered = filtered.filter(l => l.office === selectedOffice);
+    }
+
+    // 职位过滤
+    if (selectedTitle === 'partner') {
+      filtered = filtered.filter(l =>
+        l.title_zh.includes('合伙人')
+      );
+    } else if (selectedTitle === 'associate') {
+      filtered = filtered.filter(l =>
+        l.title_zh.includes('律师') && !l.title_zh.includes('合伙人')
+      );
     }
 
     if (searchQuery.trim()) {
@@ -242,7 +265,12 @@
       {#each filteredLawyers as lawyer}
         <div class="lawyer-item">
           <div class="lawyer-image">
-            <img src={lawyer.photo} alt={lawyer.name_zh} />
+            <img
+              src={lawyer.photo}
+              alt={lawyer.name_zh}
+              loading="lazy"
+              decoding="async"
+            />
           </div>
           <div class="lawyer-info">
             <div class="lawyer-header">

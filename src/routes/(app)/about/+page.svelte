@@ -5,11 +5,13 @@
   let activeSection = $state(0);
   let scrollY = $state(0);
   let showVerticalNav = $state(false);
+  let showMobileNav = $state(false);
 
   const sections = [
     { id: 'intro', label: '简介' },
     { id: 'timeline', label: '历程' },
     { id: 'values', label: '价值观' },
+    { id: 'culture', label: '企业文化' },
     { id: 'honors', label: '荣誉' },
     { id: 'probono', label: '公益' },
     { id: 'locations', label: '地点' }
@@ -18,7 +20,7 @@
   function scrollToSection(index: number) {
     const section = document.getElementById(sections[index].id);
     if (section) {
-      const offset = 0;
+      const offset = 80; // Account for fixed header
       const elementPosition = section.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.scrollY - offset;
 
@@ -26,7 +28,14 @@
         top: offsetPosition,
         behavior: 'smooth'
       });
+
+      // Close mobile nav after navigation
+      showMobileNav = false;
     }
+  }
+
+  function toggleMobileNav() {
+    showMobileNav = !showMobileNav;
   }
 
   onMount(() => {
@@ -82,7 +91,7 @@
   </nav>
 </section>
 
-<!-- Vertical Navigation (shows after scroll) -->
+<!-- Vertical Navigation (shows after scroll) - Desktop Only -->
 {#if showVerticalNav}
   <nav class="vertical-nav">
     <div class="vertical-nav__inner">
@@ -97,6 +106,44 @@
       {/each}
     </div>
   </nav>
+{/if}
+
+<!-- Mobile Floating Navigation Button -->
+{#if showVerticalNav}
+  <button class="mobile-nav-toggle" onclick={toggleMobileNav} aria-label="导航菜单">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </button>
+{/if}
+
+<!-- Mobile Navigation Menu -->
+{#if showMobileNav}
+  <div class="mobile-nav-overlay" onclick={() => showMobileNav = false}></div>
+  <div class="mobile-nav-menu">
+    <div class="mobile-nav-header">
+      <h3 class="mobile-nav-title">页面导航</h3>
+      <button class="mobile-nav-close" onclick={() => showMobileNav = false} aria-label="关闭">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    <nav class="mobile-nav-list">
+      {#each sections as section, index}
+        <button
+          class="mobile-nav-item"
+          class:active={activeSection === index}
+          onclick={() => scrollToSection(index)}
+        >
+          {section.label}
+        </button>
+      {/each}
+    </nav>
+  </div>
 {/if}
 
 <!-- Main Content -->
@@ -118,12 +165,12 @@
 
     <div class="content-grid">
       <div class="content-block">
-        <h3>OUR VISION</h3>
+        <h3>我们的愿景</h3>
         <p>成为中国最受尊敬的综合性律师事务所，以卓越的专业能力和创新的服务模式，为客户创造持续价值，推动法治进步。</p>
       </div>
 
       <div class="content-block">
-        <h3>OUR MISSION</h3>
+        <h3>我们的使命</h3>
         <p>为客户提供专业、高效、优质的法律服务，成为客户值得信赖的长期合作伙伴，助力客户实现商业目标，维护合法权益。</p>
       </div>
     </div>
@@ -152,7 +199,7 @@
         我们在知识产权、公司法、诉讼仲裁、金融法等核心领域拥有深厚的专业积累，服务范围覆盖企业法律顾问、诉讼代理、投融资并购、知识产权保护等多个方面。凭借卓越的专业能力和客户至上的服务理念，华诚已为全球200多家企业提供了高质量的法律解决方案。
       </p>
       <p>
-        展望未来，华诚将继续秉承专业精神，不断创新服务模式，拥抱数字化转型，为客户创造更大价值。Nothing is impossible, the word itself says 'I'm possible'!
+        展望未来，华诚将继续秉承专业精神，不断创新服务模式，拥抱数字化转型，为客户创造更大价值。
       </p>
     </div>
   </section>
@@ -227,33 +274,80 @@
     <div class="values-list">
       <div class="value-item">
         <div class="value-number">01</div>
-        <h4>专业 PROFESSIONAL</h4>
+        <h4>专业</h4>
         <p>深耕法律领域30年，汇聚资深专业团队，持续提升专业能力，为客户提供最专业的法律服务。</p>
       </div>
 
       <div class="value-item">
         <div class="value-number">02</div>
-        <h4>诚信 INTEGRITY</h4>
+        <h4>诚信</h4>
         <p>以诚信为本，严守职业道德，恪守执业纪律，赢得客户长期信赖与尊重。</p>
       </div>
 
       <div class="value-item">
         <div class="value-number">03</div>
-        <h4>卓越 EXCELLENCE</h4>
+        <h4>卓越</h4>
         <p>追求卓越服务品质，关注每一个细节，创造客户最大价值，实现双赢共赢。</p>
       </div>
 
       <div class="value-item">
         <div class="value-number">04</div>
-        <h4>创新 INNOVATION</h4>
+        <h4>创新</h4>
         <p>拥抱变化，勇于创新，积极探索法律科技应用，打造智慧法律服务新模式。</p>
       </div>
     </div>
   </section>
 
-  <!-- Section FOUR: Honors -->
-  <section class="content-section" id="honors">
+  <!-- Section FOUR: Culture -->
+  <section class="content-section" id="culture">
     <div class="section-number">FOUR</div>
+    <div class="section-explore">CULTURE</div>
+
+    <h2 class="section-title-alt">企业文化</h2>
+    <p class="section-subtitle">打造有温度的专业团队</p>
+
+    <div class="culture-grid">
+      <div class="culture-item">
+        <div class="culture-icon">🎯</div>
+        <h4>专业至上</h4>
+        <p>以专业能力为核心，持续学习成长，追求卓越的法律服务品质。</p>
+      </div>
+
+      <div class="culture-item">
+        <div class="culture-icon">🤝</div>
+        <h4>团队协作</h4>
+        <p>倡导开放包容的工作环境，鼓励团队合作，共同为客户创造价值。</p>
+      </div>
+
+      <div class="culture-item">
+        <div class="culture-icon">💡</div>
+        <h4>创新思维</h4>
+        <p>鼓励创新思考，勇于突破传统，积极探索法律服务的新模式。</p>
+      </div>
+
+      <div class="culture-item">
+        <div class="culture-icon">⚖️</div>
+        <h4>职业操守</h4>
+        <p>坚守职业道德底线，恪守律师执业规范，维护法律正义与客户权益。</p>
+      </div>
+
+      <div class="culture-item">
+        <div class="culture-icon">🌱</div>
+        <h4>成长发展</h4>
+        <p>提供完善的培训体系和职业发展通道，助力每一位成员实现个人价值。</p>
+      </div>
+
+      <div class="culture-item">
+        <div class="culture-icon">🌍</div>
+        <h4>社会责任</h4>
+        <p>积极参与公益法律服务，履行社会责任，用专业力量回馈社会。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section FIVE: Honors -->
+  <section class="content-section" id="honors">
+    <div class="section-number">FIVE</div>
     <div class="section-explore">RECOGNITION</div>
 
     <h2 class="section-title-alt">荣誉奖项</h2>
@@ -298,9 +392,9 @@
     </div>
   </section>
 
-  <!-- Section FIVE: Pro Bono -->
+  <!-- Section SIX: Pro Bono -->
   <section class="content-section" id="probono">
-    <div class="section-number">FIVE</div>
+    <div class="section-number">SIX</div>
     <div class="section-explore">RESPONSIBILITY</div>
 
     <h2 class="section-title-alt">公益法律服务</h2>
@@ -330,9 +424,9 @@
     </div>
   </section>
 
-  <!-- Section SIX: Locations -->
+  <!-- Section SEVEN: Locations -->
   <section class="content-section content-section--last" id="locations">
-    <div class="section-number">SIX</div>
+    <div class="section-number">SEVEN</div>
     <div class="section-explore">OFFICES</div>
 
     <h2 class="section-title-alt">办公地点</h2>
@@ -368,6 +462,7 @@
 </div>
 
 <style lang="scss">
+  @use 'sass:color';
   @use '$ui/styles/variables.scss' as *;
   @use '$ui/styles/components/index.scss' as *;
 
@@ -430,13 +525,15 @@
       font-size: 1rem;
       font-weight: 500;
       color: #334155;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.625rem;
+      letter-spacing: -0.01em;
+      line-height: 1.4;
     }
 
     p {
       font-size: 0.875rem;
       font-weight: 300;
-      line-height: 1.7;
+      line-height: 1.8;
       color: #64748b;
     }
   }
@@ -471,16 +568,72 @@
     font-size: 1.25rem;
     font-weight: 500;
     color: #1e293b;
-    margin-bottom: 0.75rem;
-    letter-spacing: 0.02em;
+    margin-bottom: 1rem;
+    letter-spacing: -0.01em;
+    line-height: 1.4;
   }
 
   .value-item p {
+    font-size: 0.9375rem;
+    font-weight: 300;
+    line-height: 1.9;
+    color: #475569;
+    max-width: 43.75rem;
+  }
+
+  // Culture Grid - 3-column layout
+  .culture-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2.5rem;
+
+    @media (max-width: 768px) {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 480px) {
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+    }
+  }
+
+  .culture-item {
+    padding: 2rem 1.5rem;
+    background: #fafafa;
+    border-radius: 0.75rem;
+    text-align: center;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: white;
+      box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.08);
+      transform: translateY(-0.25rem);
+    }
+  }
+
+  .culture-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 4rem;
+  }
+
+  .culture-item h4 {
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: #1e293b;
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.01em;
+  }
+
+  .culture-item p {
     font-size: 0.875rem;
     font-weight: 300;
     line-height: 1.8;
     color: #64748b;
-    max-width: 43.75rem;
   }
 
   // Honors List - Desktop 2-column layout
@@ -509,13 +662,16 @@
     font-size: 1.125rem;
     font-weight: 500;
     color: #1e293b;
-    margin-bottom: 0.375rem;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.01em;
+    line-height: 1.4;
   }
 
   .honor-item p {
     font-size: 0.875rem;
     font-weight: 300;
-    color: #94a3b8;
+    color: #64748b;
+    line-height: 1.6;
   }
 
   // Locations - Desktop 3-column layout
@@ -541,19 +697,23 @@
       font-size: 1.125rem;
       font-weight: 500;
       color: #1e293b;
-      margin-bottom: 0.75rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.01em;
+      line-height: 1.4;
     }
 
     p {
-      font-size: 0.875rem;
+      font-size: 0.9375rem;
       font-weight: 300;
-      color: #64748b;
-      margin-bottom: 0.375rem;
+      color: #475569;
+      margin-bottom: 0.5rem;
+      line-height: 1.7;
     }
 
     .location-contact {
       font-size: 0.8125rem;
-      color: #94a3b8;
+      color: #64748b;
+      line-height: 1.6;
     }
   }
 
@@ -584,6 +744,184 @@
     .timeline-minimal {
       grid-template-columns: 1fr;
       gap: 2rem;
+    }
+
+    // Hide horizontal navigation on mobile
+    .horizontal-nav {
+      display: none;
+    }
+
+    // Hide vertical navigation on mobile
+    .vertical-nav {
+      display: none;
+    }
+  }
+
+  // ========================================
+  // Mobile Navigation Components
+  // ========================================
+
+  // Floating Navigation Button (Mobile Only)
+  .mobile-nav-toggle {
+    display: none;
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 56px;
+    height: 56px;
+    border: none;
+    border-radius: 50%;
+    background: $color-primary;
+    color: white;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: color.adjust($color-primary, $lightness: -10%);
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+
+    @media (max-width: 768px) {
+      display: flex;
+    }
+
+    @media (max-width: 480px) {
+      bottom: 16px;
+      right: 16px;
+      width: 48px;
+      height: 48px;
+
+      svg {
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+
+  // Mobile Navigation Overlay
+  .mobile-nav-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 200;
+    animation: fadeIn 0.3s ease;
+
+    @media (min-width: 769px) {
+      display: none;
+    }
+  }
+
+  // Mobile Navigation Menu
+  .mobile-nav-menu {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 320px;
+    max-width: 85vw;
+    background: white;
+    box-shadow: -4px 0 16px rgba(0, 0, 0, 0.1);
+    z-index: 201;
+    overflow-y: auto;
+    animation: slideInRight 0.3s ease;
+
+    @media (min-width: 769px) {
+      display: none;
+    }
+
+    @media (max-width: 480px) {
+      width: 100vw;
+      max-width: 100vw;
+    }
+  }
+
+  .mobile-nav-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .mobile-nav-title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 500;
+    color: #1e293b;
+  }
+
+  .mobile-nav-close {
+    padding: 8px;
+    border: none;
+    background: transparent;
+    color: #64748b;
+    cursor: pointer;
+    transition: color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      color: $color-primary;
+    }
+  }
+
+  .mobile-nav-list {
+    padding: 16px 0;
+  }
+
+  .mobile-nav-item {
+    display: block;
+    width: 100%;
+    padding: 14px 24px;
+    border: none;
+    border-left: 3px solid transparent;
+    background: transparent;
+    color: #64748b;
+    font-size: 16px;
+    font-weight: 400;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: rgba($color-primary, 0.05);
+      color: $color-primary;
+    }
+
+    &.active {
+      border-left-color: $color-primary;
+      background: rgba($color-primary, 0.08);
+      color: $color-primary;
+      font-weight: 500;
+    }
+  }
+
+  // Animations
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideInRight {
+    from {
+      transform: translateX(100%);
+    }
+    to {
+      transform: translateX(0);
     }
   }
 </style>
