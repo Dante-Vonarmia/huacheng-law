@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { currentLocale, type Locale } from '$lib/i18n';
+  import { currentLocale, setLocale, type Locale } from '$lib/i18n';
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
 
@@ -13,16 +13,27 @@
   let showDropdown = $state(false);
 
   function switchLocale(locale: Locale) {
+    // Update the locale store first
+    setLocale(locale);
+
     // Get current path without locale prefix
     const currentPath = $page.url.pathname;
     const pathWithoutLocale = currentPath.replace(/^\/(zh|en|ja)/, '') || '/';
 
-    // Navigate to new locale path
+    // Navigate to new locale path with client-side navigation
     // For Chinese (zh), use root path without /zh/ prefix
     if (locale === 'zh') {
-      goto(pathWithoutLocale === '/' ? '/' : pathWithoutLocale);
+      goto(pathWithoutLocale === '/' ? '/' : pathWithoutLocale, {
+        replaceState: false,
+        noScroll: true,
+        keepFocus: true
+      });
     } else {
-      goto(`/${locale}${pathWithoutLocale}`);
+      goto(`/${locale}${pathWithoutLocale}`, {
+        replaceState: false,
+        noScroll: true,
+        keepFocus: true
+      });
     }
 
     showDropdown = false;
