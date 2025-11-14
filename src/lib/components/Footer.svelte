@@ -3,14 +3,16 @@ import { companyInfo, offices, footerLinks } from '$mocks/data';
 
 let currentLang = $state('zh');
 let currentYear = new Date().getFullYear();
+// Force reload
 </script>
 
 <footer class="footer">
 	<div class="footer-main">
 		<div class="container">
-			<div class="footer-grid">
-				<!-- Company Info -->
-				<div class="footer-col">
+			<!-- Top Section: Brand + Navigation -->
+			<div class="footer-top">
+				<!-- Left: Brand Info -->
+				<div class="footer-brand">
 					<img src="/images/logo.png" alt="Watson & Band" class="footer-logo" height="32" />
 					<p class="footer-desc">
 						{currentLang === 'zh'
@@ -27,70 +29,68 @@ let currentYear = new Date().getFullYear();
 					</div>
 				</div>
 
-				<!-- Quick Links - About -->
-				<div class="footer-col">
-					<h4 class="footer-title">
-						{currentLang === 'zh' ? footerLinks.about.title_zh : footerLinks.about.title_en}
-					</h4>
-					<ul class="footer-links">
-						{#each footerLinks.about.links as link}
-							<li>
-								<a href={link.path}>
-									{currentLang === 'zh' ? link.label_zh : link.label_en}
-								</a>
-							</li>
-						{/each}
-					</ul>
-				</div>
+				<!-- Right: Navigation Grid -->
+				<div class="footer-nav-grid">
+					<!-- About -->
+					<div class="footer-nav-col">
+						<h4 class="footer-title">
+							{currentLang === 'zh' ? footerLinks.about.title_zh : footerLinks.about.title_en}
+						</h4>
+						<ul class="footer-links">
+							{#each footerLinks.about.links as link}
+								<li>
+									<a href={link.path}>
+										{currentLang === 'zh' ? link.label_zh : link.label_en}
+									</a>
+								</li>
+							{/each}
+						</ul>
+					</div>
 
-				<!-- Quick Links - Services -->
-				<div class="footer-col">
-					<h4 class="footer-title">
-						{currentLang === 'zh'
-							? footerLinks.services.title_zh
-							: footerLinks.services.title_en}
-					</h4>
-					<ul class="footer-links">
-						{#each footerLinks.services.links as link}
-							<li>
-								<a href={link.path}>
-									{currentLang === 'zh' ? link.label_zh : link.label_en}
-								</a>
-							</li>
-						{/each}
-					</ul>
-				</div>
+					<!-- Services -->
+					<div class="footer-nav-col">
+						<h4 class="footer-title">
+							{currentLang === 'zh'
+								? footerLinks.services.title_zh
+								: footerLinks.services.title_en}
+						</h4>
+						<ul class="footer-links">
+							{#each footerLinks.services.links as link}
+								<li>
+									<a href={link.path}>
+										{currentLang === 'zh' ? link.label_zh : link.label_en}
+									</a>
+								</li>
+							{/each}
+						</ul>
+					</div>
 
-				<!-- Quick Links - Resources -->
-				<div class="footer-col">
-					<h4 class="footer-title">
-						{currentLang === 'zh'
-							? footerLinks.resources.title_zh
-							: footerLinks.resources.title_en}
-					</h4>
-					<ul class="footer-links">
-						{#each footerLinks.resources.links as link}
-							<li>
-								<a href={link.path}>
-									{currentLang === 'zh' ? link.label_zh : link.label_en}
-								</a>
-							</li>
-						{/each}
-					</ul>
+					<!-- Resources -->
+					<div class="footer-nav-col">
+						<h4 class="footer-title">
+							{currentLang === 'zh'
+								? footerLinks.resources.title_zh
+								: footerLinks.resources.title_en}
+						</h4>
+						<ul class="footer-links">
+							{#each footerLinks.resources.links as link}
+								<li>
+									<a href={link.path}>
+										{currentLang === 'zh' ? link.label_zh : link.label_en}
+									</a>
+								</li>
+							{/each}
+						</ul>
+					</div>
 				</div>
+			</div>
 
-				<!-- Contact -->
-				<div class="footer-col">
-					<h4 class="footer-title">
-						{currentLang === 'zh' ? '联系我们' : 'Contact Us'}
-					</h4>
-					<ul class="footer-contact">
-						<li>
-							<strong>{currentLang === 'zh' ? '上海总部' : 'Shanghai HQ'}</strong>
-							<span>{offices[0].tel}</span>
-							<span>{offices[0].email}</span>
-						</li>
-					</ul>
+			<!-- Bottom Section: Contact Info -->
+			<div class="footer-contact-bar">
+				<div class="footer-contact-item">
+					<strong>{currentLang === 'zh' ? '上海总部' : 'Shanghai HQ'}</strong>
+					<span>{offices[0].tel}</span>
+					<span>{offices[0].email}</span>
 				</div>
 			</div>
 		</div>
@@ -120,101 +120,244 @@ let currentYear = new Date().getFullYear();
 	@use '$ui/styles/mixins.scss' as *;
 
 	.footer {
-		background: linear-gradient(180deg, #1a1f2e 0%, #0f1419 100%);
-		color: rgba($color-white, 0.75);
+		background: #0e1b3a; // 使用律所主色调深色版
+		color: rgba($color-white, 0.8);
 		margin-top: auto;
 		position: relative;
+		overflow: hidden;
 
+		// 顶部装饰线 - 细腻的金色渐变
 		&::before {
 			content: '';
 			position: absolute;
 			top: 0;
 			left: 0;
 			right: 0;
-			height: 1px;
-			background: linear-gradient(90deg, transparent, rgba($color-secondary, 0.3), transparent);
+			height: 2px;
+			background: linear-gradient(
+				90deg,
+				transparent 0%,
+				rgba($color-secondary, 0.2) 20%,
+				rgba($color-secondary, 0.5) 50%,
+				rgba($color-secondary, 0.2) 80%,
+				transparent 100%
+			);
+		}
+
+		// 背景装饰图案（可选）
+		&::after {
+			content: '';
+			position: absolute;
+			bottom: 0;
+			right: 0;
+			width: 600px;
+			height: 600px;
+			background: radial-gradient(
+				circle at center,
+				rgba($color-secondary, 0.03) 0%,
+				transparent 70%
+			);
+			pointer-events: none;
 		}
 	}
 
 	.footer-main {
-		padding: $spacing-section-top 0 $spacing-section-bottom;
+		padding: 4rem 0 3rem;
+		position: relative;
+		z-index: 1;
 
 		@include respond-to(mobile) {
-			padding: $spacing-2xl 0;
+			padding: 3rem 0 2rem;
 		}
 	}
 
-	.footer-grid {
+	.footer-top {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-start;
+		gap: 4rem;
+		margin-bottom: 3rem;
+
+		@media (max-width: 1024px) {
+			flex-direction: column;
+			gap: 3rem;
+		}
+	}
+
+	.footer-brand {
+		flex: 0 0 auto;
+		max-width: 420px;
+
+		@media (max-width: 1024px) {
+			max-width: 100%;
+		}
+	}
+
+	.footer-nav-grid {
+		flex: 1;
 		display: grid;
-		grid-template-columns: 2fr repeat(4, 1fr);
-		gap: $spacing-xl;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 3rem;
 
-		@include respond-to(md) {
-			grid-template-columns: repeat(3, 1fr);
+		@media (max-width: 768px) {
+			grid-template-columns: repeat(2, 1fr);
+			gap: 2rem;
 		}
 
-		@include respond-to(sm) {
+		@media (max-width: 480px) {
 			grid-template-columns: 1fr;
-			gap: $spacing-lg;
+			gap: 1.5rem;
 		}
 	}
 
-	.footer-col {
-		&:first-child {
-			@include respond-to(md) {
-				grid-column: 1 / -1;
+	.footer-nav-col {
+		min-width: 0; // Prevent overflow
+	}
+
+	.footer-contact-bar {
+		padding: 2rem 0;
+		border-top: 1px solid rgba($color-white, 0.1);
+		display: flex;
+		justify-content: flex-start;
+		gap: 3rem;
+
+		@media (max-width: 768px) {
+			flex-direction: column;
+			gap: 1.5rem;
+		}
+	}
+
+	.footer-contact-item {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+
+		strong {
+			color: rgba($color-white, 0.95);
+			font-weight: 600;
+			font-size: 0.9375rem;
+			margin-bottom: 0.25rem;
+		}
+
+		span {
+			color: rgba($color-white, 0.65);
+			font-size: 0.875rem;
+			font-weight: 300;
+			transition: color 0.2s ease;
+
+			&:hover {
+				color: rgba($color-white, 0.85);
 			}
 		}
 	}
 
 	.footer-logo {
-		height: 32px;
+		height: 38px;
 		width: auto;
-		margin-bottom: $spacing-md;
-		filter: brightness(0) invert(1); // 转为白色
-		opacity: 0.9;
+		margin-bottom: 1.25rem;
+		filter: brightness(0) invert(1);
+		opacity: 0.95;
+		transition: opacity 0.3s ease;
+
+		&:hover {
+			opacity: 1;
+		}
 	}
 
 	.footer-desc {
-		@include body-text;
-		font-size: $font-size-small;
-		line-height: $line-height-relaxed;
-		margin-bottom: $spacing-md;
-		max-width: 360px;
+		font-size: 0.9375rem;
+		line-height: 1.7;
+		margin-bottom: 1.5rem;
+		max-width: 400px;
+		color: rgba($color-white, 0.7);
+		font-weight: 300;
+		letter-spacing: 0.01em;
+
+		@media (max-width: 480px) {
+			font-size: 0.875rem;
+			line-height: 1.65;
+		}
 	}
 
 	.social-links {
-		@include flex-center;
+		display: flex;
+		align-items: center;
 		justify-content: flex-start;
-		gap: $spacing-sm;
+		gap: 0.75rem;
 
 		a {
-			@include flex-center;
-			width: 36px;
-			height: 36px;
-			background: rgba($color-white, 0.08);
-			border: 1px solid rgba($color-white, 0.1);
-			border-radius: $radius-full;
-			color: rgba($color-white, 0.7);
-			transition: $transition-fast;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			width: 40px;
+			height: 40px;
+			background: rgba($color-white, 0.05);
+			border: 1px solid rgba($color-white, 0.12);
+			border-radius: 50%;
+			color: rgba($color-white, 0.65);
+			transition: all 0.3s ease;
+			position: relative;
+			overflow: hidden;
+
+			// 悬停发光效果
+			&::before {
+				content: '';
+				position: absolute;
+				inset: 0;
+				border-radius: 50%;
+				background: radial-gradient(circle, rgba($color-secondary, 0.2) 0%, transparent 70%);
+				opacity: 0;
+				transition: opacity 0.3s ease;
+			}
 
 			&:hover {
 				background: rgba($color-secondary, 0.15);
-				border-color: rgba($color-secondary, 0.3);
+				border-color: rgba($color-secondary, 0.4);
 				color: $color-secondary;
-				transform: translateY(-2px);
+				transform: translateY(-3px) scale(1.05);
+				box-shadow: 0 4px 12px rgba($color-secondary, 0.2);
+
+				&::before {
+					opacity: 1;
+				}
+			}
+
+			&:active {
+				transform: translateY(-1px) scale(1);
 			}
 		}
 
 		.social-icon {
-			font-size: $font-size-p;
+			font-size: 1rem;
+			position: relative;
+			z-index: 1;
 		}
 	}
 
 	.footer-title {
-		@include block-title;
-		color: $color-white;
-		margin-bottom: $spacing-md;
+		font-size: 0.8125rem;
+		font-weight: 700;
+		color: rgba($color-white, 0.95);
+		margin-bottom: 1.25rem;
+		text-transform: uppercase;
+		letter-spacing: 0.12em;
+		position: relative;
+		padding-bottom: 0.75rem;
+
+		// 底部装饰线
+		&::after {
+			content: '';
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			width: 32px;
+			height: 2px;
+			background: linear-gradient(90deg, $color-secondary 0%, transparent 100%);
+		}
+
+		@media (max-width: 480px) {
+			font-size: 0.75rem;
+		}
 	}
 
 	.footer-links {
@@ -223,120 +366,125 @@ let currentYear = new Date().getFullYear();
 		margin: 0;
 
 		li {
-			margin-bottom: $spacing-xs;
+			margin-bottom: 0.625rem;
 
 			a {
-				@include body-text;
-				font-size: $font-size-small;
+				font-size: 0.875rem;
+				font-weight: 400;
 				color: rgba($color-white, 0.65);
-				transition: $transition-fast;
+				text-decoration: none;
 				display: inline-block;
 				position: relative;
+				transition: all 0.25s ease;
+				padding-left: 0;
 
-				&::before {
+				// 悬停下划线动画
+				&::after {
 					content: '';
 					position: absolute;
-					left: -12px;
-					top: 50%;
-					transform: translateY(-50%);
+					bottom: -2px;
+					left: 0;
 					width: 0;
 					height: 1px;
 					background: $color-secondary;
-					transition: width $transition-fast;
+					transition: width 0.3s ease;
 				}
 
 				&:hover {
-					color: $color-white;
-					transform: translateX(4px);
+					color: rgba($color-white, 0.95);
+					padding-left: 8px;
 
-					&::before {
-						width: 6px;
+					&::after {
+						width: calc(100% - 8px);
 					}
+				}
+
+				@media (max-width: 480px) {
+					font-size: 0.8125rem;
 				}
 			}
 		}
 	}
 
-	.footer-contact {
-		list-style: none;
-		padding: 0;
-		margin: 0;
 
-		li {
-			@include body-text;
-			font-size: $font-size-small;
-			line-height: $line-height-relaxed;
+	.footer-bottom {
+		border-top: 1px solid rgba($color-white, 0.08);
+		padding: 1.75rem 0;
+		background: rgba(0, 0, 0, 0.25);
+		backdrop-filter: blur(10px);
+		position: relative;
+		z-index: 1;
 
-			strong {
-				display: block;
-				color: $color-white;
-				margin-bottom: $spacing-xs;
-			}
-
-			span {
-				display: block;
-				color: rgba($color-white, 0.7);
-				margin-bottom: 4px;
-			}
+		@media (max-width: 480px) {
+			padding: 1.5rem 0;
 		}
 	}
 
-	.footer-bottom {
-		border-top: 1px solid rgba($color-white, 0.06);
-		padding: $spacing-md 0;
-		background: rgba(0, 0, 0, 0.2);
-	}
-
 	.footer-bottom-content {
-		@include flex-between;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1.5rem;
 
-		@include respond-to(mobile) {
+		@media (max-width: 768px) {
 			flex-direction: column;
 			text-align: center;
-			gap: $spacing-sm;
+			gap: 1rem;
 		}
 	}
 
 	.copyright {
-		@include body-text;
-		font-size: $font-size-xs;
+		font-size: 0.8125rem;
 		color: rgba($color-white, 0.5);
 		margin: 0;
+		font-weight: 300;
+		letter-spacing: 0.01em;
+
+		@media (max-width: 480px) {
+			font-size: 0.75rem;
+		}
 	}
 
 	.footer-legal {
-		@include flex-center;
-		gap: $spacing-sm;
+		display: flex;
+		align-items: center;
+		gap: 1rem;
 
 		a {
-			@include body-text;
-			font-size: $font-size-xs;
-			color: rgba($color-white, 0.5);
-			transition: $transition-fast;
+			font-size: 0.8125rem;
+			font-weight: 400;
+			color: rgba($color-white, 0.55);
+			text-decoration: none;
 			position: relative;
+			transition: color 0.25s ease;
 
 			&::after {
 				content: '';
 				position: absolute;
-				bottom: -2px;
+				bottom: -3px;
 				left: 0;
 				width: 0;
 				height: 1px;
-				background: $color-secondary;
-				transition: width $transition-fast;
+				background: linear-gradient(90deg, $color-secondary, rgba($color-secondary, 0.4));
+				transition: width 0.3s ease;
 			}
 
 			&:hover {
-				color: $color-secondary;
+				color: rgba($color-white, 0.9);
 
 				&::after {
 					width: 100%;
 				}
 			}
+
+			@media (max-width: 480px) {
+				font-size: 0.75rem;
+			}
 		}
 
 		.divider {
-			color: rgba($color-white, 0.2);
+			color: rgba($color-white, 0.25);
+			font-weight: 300;
 		}
 	}
 </style>

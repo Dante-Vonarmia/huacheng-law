@@ -2,9 +2,18 @@
   import type { PageData } from './$types';
   import { Section } from '$ui/components';
   import { NewsCard } from '$ui/domain';
-    
+  import { onMount } from 'svelte';
+  import { goto } from '$app/navigation';
+  import { browser } from '$app/environment';
+
   // Props
   let { data }: { data: PageData } = $props();
+
+  // State
+  let readingProgress = $state(0);
+  let showBackToTop = $state(false);
+  let nextArticleRef: HTMLDivElement | null = $state(null);
+  let isLoadingNext = $state(false);
 
   // 格式化日期
   const formattedDate = $derived(new Date(data.news.published_date).toLocaleDateString('zh-CN', {
@@ -13,11 +22,13 @@
     day: 'numeric'
   }));
 
-  import { browser } from '$app/environment';
+  // 获取下一篇文章
+  const nextArticle = $derived(
+    data.relatedNews.length > 0 ? data.relatedNews[0] : null
+  );
 
   // 分享功能
   function shareOnWeChat() {
-    // 实际项目中需要调用微信分享API
     if (browser) alert('微信分享功能');
   }
 
@@ -33,6 +44,73 @@
     navigator.clipboard.writeText(window.location.href);
     alert('链接已复制到剪贴板');
   }
+
+  // 返回顶部
+  function scrollToTop() {
+    if (browser) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  // 监听滚动 - 更新阅读进度和返回顶部按钮
+  function handleScroll() {
+    if (!browser) return;
+
+    const windowHeight = window.innerHeight;
+    const documentHeight = document.documentElement.scrollHeight;
+    const scrollTop = window.scrollY;
+
+    // 计算阅读进度
+    const maxScroll = documentHeight - windowHeight;
+    const progress = (scrollTop / maxScroll) * 100;
+    readingProgress = Math.min(100, Math.max(0, progress));
+
+    // 显示/隐藏返回顶部按钮
+    showBackToTop = scrollTop > 300;
+  }
+
+  // 自动加载下一篇
+  function setupAutoLoad() {
+    if (!browser || !nextArticleRef || !nextArticle) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !isLoadingNext) {
+            isLoadingNext = true;
+            // 延迟加载，给用户时间看到"下一篇"提示
+            setTimeout(() => {
+              goto(`/news/${nextArticle.id}`, {
+                replaceState: false,
+                noScroll: false,
+                keepFocus: false
+              });
+            }, 1500);
+          }
+        });
+      },
+      {
+        rootMargin: '0px 0px 200px 0px',
+        threshold: 0.1
+      }
+    );
+
+    observer.observe(nextArticleRef);
+
+    return () => observer.disconnect();
+  }
+
+  onMount(() => {
+    if (browser) {
+      window.addEventListener('scroll', handleScroll, { passive: true });
+      const cleanup = setupAutoLoad();
+
+      return () => {
+        window.removeEventListener('scroll', handleScroll);
+        cleanup?.();
+      };
+    }
+  });
 </script>
 
 <svelte:head>
@@ -44,6 +122,11 @@
     <meta property="og:image" content={data.news.cover_image} />
   {/if}
 </svelte:head>
+
+<!-- Reading Progress Bar -->
+<div class="reading-progress">
+  <div class="reading-progress__bar" style="width: {readingProgress}%"></div>
+</div>
 
 <div class="news-detail">
   <!-- Breadcrumb -->
@@ -80,7 +163,7 @@
       <!-- Cover Image -->
       {#if data.news.cover_image}
         <div class="article__cover">
-          <img src={data.news.cover_image} alt={data.news.title_zh} />
+          <img src={data.news.cover_image} alt={data.news.title_zh} loading="lazy" />
         </div>
       {/if}
 
@@ -129,15 +212,54 @@
           </button>
         </div>
       </div>
+
+      <!-- Next Article Preview -->
+      {#if nextArticle}
+        <div class="next-article" bind:this={nextArticleRef}>
+          <div class="next-article__label">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M7 4l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>接下来阅读</span>
+          </div>
+          <a href="/news/{nextArticle.id}" class="next-article__card">
+            {#if nextArticle.cover_image}
+              <div class="next-article__image">
+                <img src={nextArticle.cover_image} alt={nextArticle.title_zh} loading="lazy" />
+              </div>
+            {/if}
+            <div class="next-article__content">
+              <div class="next-article__category">{nextArticle.category}</div>
+              <h3 class="next-article__title">{nextArticle.title_zh}</h3>
+              <p class="next-article__summary">{nextArticle.summary_zh}</p>
+              <div class="next-article__meta">
+                <time datetime={nextArticle.published_date}>
+                  {new Date(nextArticle.published_date).toLocaleDateString('zh-CN', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })}
+                </time>
+              </div>
+            </div>
+          </a>
+          {#if isLoadingNext}
+            <div class="next-article__loading">
+              <div class="loading-spinner"></div>
+              <p>正在加载下一篇...</p>
+            </div>
+          {/if}
+        </div>
+      {/if}
     </article>
   </Section>
 
   <!-- Related News -->
-  {#if data.relatedNews.length > 0}
+  {#if data.relatedNews.length > 1}
     <Section bgColor="lightest">
-      <h2 class="related-title">相关新闻</h2>
+      <h2 class="related-title">更多相关内容</h2>
       <div class="related-grid">
-        {#each data.relatedNews as newsItem (newsItem.id)}
+        {#each data.relatedNews.slice(1) as newsItem (newsItem.id)}
           <NewsCard news={newsItem} locale="zh" variant="compact" />
         {/each}
       </div>
@@ -145,10 +267,41 @@
   {/if}
 </div>
 
+<!-- Back to Top Button -->
+{#if showBackToTop}
+  <button
+    class="back-to-top"
+    onclick={scrollToTop}
+    aria-label="返回顶部"
+  >
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <path d="M12 19V5M12 5l-7 7M12 5l7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+{/if}
+
 
 <style lang="scss">
+  @use 'sass:color';
   @use '$ui/styles/variables.scss' as *;
   @use '$ui/styles/mixins.scss' as *;
+
+  // Reading Progress Bar
+  .reading-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: rgba(0, 0, 0, 0.05);
+    z-index: 9999;
+
+    &__bar {
+      height: 100%;
+      background: linear-gradient(90deg, $color-primary 0%, $color-secondary 100%);
+      transition: width 0.1s ease-out;
+    }
+  }
 
   .news-detail {
     min-height: 100vh;
@@ -157,15 +310,20 @@
 
   // Breadcrumb
   .breadcrumb {
-    padding: $spacing-lg 0;
+    padding: $spacing-md 0;
     background: $color-background;
     border-bottom: 1px solid $color-border;
+
+    @include respond-to(mobile) {
+      padding: $spacing-sm 0;
+    }
 
     &__nav {
       display: flex;
       align-items: center;
       gap: $spacing-sm;
       font-size: $font-size-sm;
+      flex-wrap: wrap;
     }
 
     &__link {
@@ -186,18 +344,41 @@
       color: $color-text;
       font-weight: 500;
       @include truncate;
-      max-width: 300px;
+      max-width: 200px;
+
+      @include respond-to(mobile) {
+        max-width: 150px;
+      }
     }
   }
 
-  // Article
+  // Article - Mobile First Typography
   .article {
-    max-width: 800px;
-    margin: 0 auto;
+    // Mobile: 全宽 - 内边距
+    width: 100%;
+    padding: 0 $spacing-lg;
+
+    // Tablet+: 限制最大宽度居中
+    @media (min-width: 768px) {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 $spacing-xl;
+    }
+
+    // Desktop: 更宽内容区
+    @media (min-width: 1200px) {
+      max-width: 800px;
+    }
 
     &__header {
       text-align: center;
-      margin-bottom: $spacing-2xl;
+      margin-bottom: $spacing-xl;
+      padding-top: $spacing-xl;
+
+      @include respond-to(mobile) {
+        margin-bottom: $spacing-lg;
+        padding-top: $spacing-lg;
+      }
     }
 
     &__category {
@@ -214,14 +395,20 @@
     }
 
     &__title {
-      @include heading(xxl);
+      font-size: 2rem;
       font-weight: 700;
       color: $color-text;
       margin-bottom: $spacing-lg;
       line-height: 1.3;
+      letter-spacing: -0.02em;
 
       @include respond-to(mobile) {
-        font-size: 28px;
+        font-size: 1.5rem;
+        margin-bottom: $spacing-md;
+      }
+
+      @media (min-width: 768px) {
+        font-size: 2.5rem;
       }
     }
 
@@ -229,13 +416,14 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: $spacing-lg;
+      gap: $spacing-md;
       color: $color-text-light;
       font-size: $font-size-sm;
+      flex-wrap: wrap;
 
       @include respond-to(mobile) {
-        flex-direction: column;
-        gap: $spacing-xs;
+        gap: $spacing-sm;
+        font-size: $font-size-xs;
       }
     }
 
@@ -256,10 +444,17 @@
     }
 
     &__cover {
-      margin-bottom: $spacing-2xl;
-      border-radius: $radius-lg;
+      margin-bottom: $spacing-xl;
+      border-radius: $radius-md;
       overflow: hidden;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+
+      @include respond-to(mobile) {
+        margin-bottom: $spacing-lg;
+        border-radius: $radius-sm;
+        margin-left: -$spacing-lg;
+        margin-right: -$spacing-lg;
+      }
 
       img {
         width: 100%;
@@ -273,46 +468,73 @@
     }
 
     &__summary {
-      @include heading(md);
+      font-size: 1.125rem;
       font-weight: 400;
       color: $color-text-light;
       padding: $spacing-lg;
       background: rgba($color-secondary, 0.05);
       border-left: 4px solid $color-secondary;
-      border-radius: $radius-md;
-      margin-bottom: $spacing-2xl;
+      border-radius: $radius-sm;
+      margin-bottom: $spacing-xl;
       line-height: 1.8;
 
       @include respond-to(mobile) {
-        font-size: $font-size-base;
+        font-size: 1rem;
         padding: $spacing-md;
+        margin-bottom: $spacing-lg;
+        line-height: 1.7;
       }
     }
 
     &__body {
-      @include body-text;
+      font-size: 1.0625rem;
       color: $color-text;
       line-height: 1.8;
+      letter-spacing: 0.01em;
+
+      @include respond-to(mobile) {
+        font-size: 1rem;
+        line-height: 1.75;
+      }
 
       :global(p) {
         margin-bottom: $spacing-lg;
+
+        @include respond-to(mobile) {
+          margin-bottom: $spacing-md;
+        }
       }
 
       :global(h2) {
-        @include heading(xl);
+        font-size: 1.75rem;
         font-weight: 700;
         margin: $spacing-2xl 0 $spacing-lg;
+        color: $color-text;
+
+        @include respond-to(mobile) {
+          font-size: 1.375rem;
+          margin: $spacing-xl 0 $spacing-md;
+        }
       }
 
       :global(h3) {
-        @include heading(lg);
+        font-size: 1.375rem;
         font-weight: 600;
         margin: $spacing-xl 0 $spacing-md;
+        color: $color-text;
+
+        @include respond-to(mobile) {
+          font-size: 1.125rem;
+        }
       }
 
       :global(ul), :global(ol) {
         margin-bottom: $spacing-lg;
         padding-left: $spacing-xl;
+
+        @include respond-to(mobile) {
+          padding-left: $spacing-lg;
+        }
       }
 
       :global(li) {
@@ -325,6 +547,12 @@
         border-left: 4px solid $color-primary;
         margin: $spacing-lg 0;
         font-style: italic;
+        color: $color-text-light;
+
+        @include respond-to(mobile) {
+          padding: $spacing-sm $spacing-md;
+          margin: $spacing-md 0;
+        }
       }
 
       :global(img) {
@@ -332,19 +560,26 @@
         height: auto;
         border-radius: $radius-md;
         margin: $spacing-lg 0;
+
+        @include respond-to(mobile) {
+          border-radius: $radius-sm;
+          margin: $spacing-md 0;
+        }
       }
     }
 
     &__share {
-      padding-top: $spacing-2xl;
+      padding-top: $spacing-xl;
+      margin-top: $spacing-xl;
       border-top: 1px solid $color-border;
       display: flex;
       align-items: center;
       gap: $spacing-lg;
+      flex-wrap: wrap;
 
       @include respond-to(mobile) {
-        flex-direction: column;
-        align-items: flex-start;
+        padding-top: $spacing-lg;
+        margin-top: $spacing-lg;
       }
     }
   }
@@ -352,11 +587,12 @@
   .share-label {
     font-weight: 600;
     color: $color-text;
+    font-size: $font-size-sm;
   }
 
   .share-buttons {
     display: flex;
-    gap: $spacing-md;
+    gap: $spacing-sm;
     flex-wrap: wrap;
   }
 
@@ -364,7 +600,7 @@
     display: inline-flex;
     align-items: center;
     gap: $spacing-xs;
-    padding: $spacing-sm $spacing-lg;
+    padding: $spacing-sm $spacing-md;
     border: 1px solid $color-border;
     background: $color-white;
     color: $color-text;
@@ -402,14 +638,226 @@
         border-color: $color-primary;
       }
     }
+
+    @include respond-to(mobile) {
+      padding: $spacing-xs $spacing-sm;
+      font-size: $font-size-xs;
+    }
+  }
+
+  // Next Article Preview
+  .next-article {
+    margin-top: $spacing-3xl;
+    padding-top: $spacing-3xl;
+    border-top: 2px solid $color-border;
+
+    @include respond-to(mobile) {
+      margin-top: $spacing-2xl;
+      padding-top: $spacing-2xl;
+    }
+
+    &__label {
+      display: flex;
+      align-items: center;
+      gap: $spacing-xs;
+      color: $color-primary;
+      font-size: $font-size-sm;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: $spacing-lg;
+
+      svg {
+        animation: bounce-right 2s ease-in-out infinite;
+      }
+    }
+
+    &__card {
+      display: block;
+      padding: $spacing-xl;
+      background: $color-background;
+      border-radius: $radius-lg;
+      text-decoration: none;
+      transition: all $transition-base $transition-ease;
+      border: 2px solid transparent;
+
+      @include respond-to(mobile) {
+        padding: $spacing-md;
+      }
+
+      &:hover {
+        background: $color-white;
+        border-color: $color-primary;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        transform: translateY(-4px);
+      }
+    }
+
+    &__image {
+      width: 100%;
+      height: 200px;
+      border-radius: $radius-md;
+      overflow: hidden;
+      margin-bottom: $spacing-md;
+
+      @include respond-to(mobile) {
+        height: 160px;
+      }
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+    &__content {
+      // Inherits full width
+    }
+
+    &__category {
+      display: inline-block;
+      padding: $spacing-xs $spacing-sm;
+      background: rgba($color-primary, 0.1);
+      color: $color-primary;
+      font-size: $font-size-xs;
+      font-weight: 600;
+      border-radius: $radius-sm;
+      margin-bottom: $spacing-sm;
+    }
+
+    &__title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: $color-text;
+      margin-bottom: $spacing-sm;
+      line-height: 1.3;
+
+      @include respond-to(mobile) {
+        font-size: 1.25rem;
+      }
+    }
+
+    &__summary {
+      font-size: $font-size-base;
+      color: $color-text-light;
+      line-height: 1.6;
+      margin-bottom: $spacing-md;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+
+      @include respond-to(mobile) {
+        font-size: $font-size-sm;
+      }
+    }
+
+    &__meta {
+      font-size: $font-size-sm;
+      color: $color-text-light;
+
+      @include respond-to(mobile) {
+        font-size: $font-size-xs;
+      }
+    }
+
+    &__loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: $spacing-md;
+      padding: $spacing-xl;
+      color: $color-text-light;
+      font-size: $font-size-sm;
+    }
+  }
+
+  @keyframes bounce-right {
+    0%, 100% {
+      transform: translateX(0);
+    }
+    50% {
+      transform: translateX(4px);
+    }
+  }
+
+  .loading-spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid rgba($color-primary, 0.2);
+    border-top-color: $color-primary;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  // Back to Top Button
+  .back-to-top {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: $color-primary;
+    color: $color-white;
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all $transition-base $transition-ease;
+    z-index: 999;
+    animation: fadeInUp 0.3s ease;
+
+    @include respond-to(mobile) {
+      bottom: 1.5rem;
+      right: 1.5rem;
+      width: 44px;
+      height: 44px;
+    }
+
+    &:hover {
+      background: color.adjust($color-primary, $lightness: -10%);
+      transform: translateY(-4px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    &:active {
+      transform: translateY(-2px);
+    }
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   // Related News
   .related-title {
-    @include heading(xl);
+    font-size: 1.75rem;
     font-weight: 700;
     text-align: center;
     margin-bottom: $spacing-xl;
+    color: $color-text;
+
+    @include respond-to(mobile) {
+      font-size: 1.375rem;
+      margin-bottom: $spacing-lg;
+    }
   }
 
   .related-grid {
@@ -419,6 +867,7 @@
 
     @include respond-to(mobile) {
       grid-template-columns: 1fr;
+      gap: $spacing-md;
     }
   }
 </style>

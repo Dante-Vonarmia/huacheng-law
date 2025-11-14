@@ -529,22 +529,44 @@ function handleNavMouseLeave() {
 	overflow-x: hidden;
 	-webkit-overflow-scrolling: touch;
 
+	// 优化滚动条样式
+	&::-webkit-scrollbar {
+		width: 6px;
+	}
+
+	&::-webkit-scrollbar-track {
+		background: transparent;
+	}
+
+	&::-webkit-scrollbar-thumb {
+		background: rgba(0, 0, 0, 0.1);
+		border-radius: 3px;
+
+		&:hover {
+			background: rgba(0, 0, 0, 0.2);
+		}
+	}
+
 	@media (max-width: 1024px) {
 		// 平板及以下使用紧凑菜单
-		top: 72px;
+		top: 64px; // 匹配移动端 header 高度
 		right: 16px;
 		width: 320px;
 	}
 
 	@media (max-width: 768px) {
+		top: 64px;
 		right: 12px;
 		width: calc(100vw - 24px);
 		max-width: 360px;
+		max-height: calc(100vh - 80px);
 	}
 
 	@media (max-width: 480px) {
+		top: 64px;
 		right: 8px;
 		width: calc(100vw - 16px);
+		max-height: calc(100vh - 72px);
 	}
 }
 
@@ -578,34 +600,55 @@ function handleNavMouseLeave() {
 }
 
 .mobile-children {
-	padding: 4px 8px 8px;
+	padding: 8px 8px 12px;
 	background: rgba(0, 0, 0, 0.02);
-	border-radius: 4px;
-	margin: 4px 12px 8px;
+	border-radius: 6px;
+	margin: 6px 12px 10px;
+
+	@media (max-width: 480px) {
+		padding: 6px 6px 10px;
+		margin: 4px 8px 8px;
+	}
 }
 
 .mobile-group-title {
-	padding: 8px 12px 4px;
+	padding: 10px 12px 6px;
 	font-size: 10px;
-	font-weight: 600;
+	font-weight: 700;
 	color: $color-text-tertiary;
 	text-transform: uppercase;
-	letter-spacing: 0.08em;
+	letter-spacing: 0.1em;
+
+	@media (max-width: 480px) {
+		padding: 8px 10px 4px;
+		font-size: 9px;
+	}
 }
 
 .mobile-child-link {
 	display: block;
-	padding: 8px 12px;
+	padding: 10px 12px;
 	font-size: 13px;
+	line-height: 1.4;
 	color: $color-text-secondary;
 	text-decoration: none;
 	transition: all 0.2s ease;
 	border-radius: 4px;
-	margin: 1px 0;
+	margin: 2px 0;
 
 	&:hover {
 		background: rgba($color-primary, 0.08);
 		color: $color-primary;
+		transform: translateX(2px);
+	}
+
+	&:active {
+		background: rgba($color-primary, 0.12);
+	}
+
+	@media (max-width: 480px) {
+		padding: 9px 10px;
+		font-size: 12.5px;
 	}
 }
 

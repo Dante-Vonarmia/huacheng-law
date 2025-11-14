@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { LocaleSwitcher } from '$ui/components';
+  import Footer from '$lib/components/Footer.svelte';
   import { currentLocale, createTranslator } from '$lib/i18n';
 
   // Create reactive translator function
@@ -469,6 +470,9 @@
     <a href="/contact" class="cta-btn-large">{t('home.contact_cta')} →</a>
   </div>
 </section>
+
+<!-- Footer -->
+<Footer />
 
 <style lang="scss">
   @use 'sass:color';
